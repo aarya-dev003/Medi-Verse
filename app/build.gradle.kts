@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp").version("1.6.10-1.0.4")
 }
 
 android {
@@ -80,4 +81,15 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.27.1")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.27.1")
     implementation("androidx.compose.foundation:foundation-android:1.6.5")
+
+    //retrofit and moshi dependency
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.11.0")
+
+    //koin dependency
+    implementation("io.insert-koin:koin-android:3.6.0-wasm-alpha2")
+    implementation("io.insert-koin:koin-androidx-compose:3.6.0-wasm-alpha2")
+
 }
