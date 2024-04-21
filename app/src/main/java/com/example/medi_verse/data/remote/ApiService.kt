@@ -17,7 +17,7 @@ interface ApiService {
         const val BASE_URL = "https://aaryaworks.tech/"
     }
 
-    //for users (students)
+    //for users (student)
     @Headers("Content-Type: application/json")
     @POST(REGISTER_END_POINT)
     suspend fun createUserAccount(
