@@ -8,6 +8,7 @@ import com.example.medi_verse.utils.Result.Error
 import com.example.medi_verse.utils.Result.Success
 import com.example.medi_verse.utils.SessionManager
 import com.example.medi_verse.utils.isNetworkConnected
+import com.example.requests.ClubLoginRequest
 
 class RemoteRepoImpl (
     private val apiService: ApiService,
@@ -80,6 +81,35 @@ class RemoteRepoImpl (
             e.printStackTrace()
             Result.Error(e.message ?: "Some Problem Occurred"," ")
         }
+    }
+
+
+    //for club
+    override suspend fun loginClub(club: ClubLoginRequest): Result<String> {
+        return try{
+            if (!isNetworkConnected(sessionManager.context)) {
+                Error("No Internet Connection!", "")
+            } else {
+                val result = apiService.loginClub(club)
+                val name = sessionManager.getCurrentUsername()
+                result.let {
+                    name?.let { it1 ->
+                        sessionManager.updateSession(
+                            token = it.token ?: "",
+                            name = it1,
+                            email = club.username
+                        )
+                    }
+                    Success("User Created Successfully!")
+                } ?: Error("Some Error Occurred", "")
+            }
+        } catch (e : Exception) {
+            Error(e.message ?: "Some Problem Occurred!", "")
+        }
+    }
+
+    override suspend fun loginAdmin(admin: LoginRequest): Result<String> {
+        TODO("Not yet implemented")
     }
 
 

@@ -12,8 +12,8 @@ import com.example.medi_verse.CollegeAdmin.CollegeAdminMainScreen
 import com.example.medi_verse.CollegeAdmin.LoginSignUp.CollegeAdLogin
 import com.example.medi_verse.CollegeAdmin.LoginSignUp.CollegeAdSignup
 import com.example.medi_verse.Student.HomeMainScreen
-import com.example.medi_verse.Student.StudentLoginSignup.StSignup
 import com.example.medi_verse.Student.StudentLoginSignup.StLogin
+import com.example.medi_verse.Student.StudentLoginSignup.StSignup
 import com.example.medi_verse.repository.RemoteRepo
 
 @Composable
@@ -27,7 +27,7 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
             DecisionPage(AppnavController=navController)
         }
         composable(route= AppScreens.StLogin.route){
-            StLogin(AppnavController = navController)
+            StLogin(AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.HomeMainScreen.route){
             HomeMainScreen(context = context)
@@ -39,7 +39,7 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
             ClubAdSignup(AppnavController = navController)
         }
         composable(route= AppScreens.ClubAdLogin.route){
-            ClubAdLogin(AppnavController = navController)
+            ClubAdLogin(AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.ClubAdminMainScreen.route){
             ClubAdminMainScreen(context)
@@ -48,7 +48,7 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
             CollegeAdminMainScreen(context)
         }
         composable(route= AppScreens.CollegeAdLogin.route){
-            CollegeAdLogin(AppnavController = navController)
+            CollegeAdLogin(AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.CollegeAdSignup.route){
             CollegeAdSignup(AppnavController = navController)

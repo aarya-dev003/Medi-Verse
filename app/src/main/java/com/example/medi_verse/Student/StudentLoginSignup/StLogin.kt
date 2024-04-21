@@ -24,24 +24,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
+import com.example.medi_verse.data.remote.model.LoginRequest
+import com.example.medi_verse.repository.RemoteRepo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StLogin(AppnavController: NavController) {
+fun StLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -111,7 +116,19 @@ fun StLogin(AppnavController: NavController) {
                         shape = RoundedCornerShape(12.dp)
 
                     )
-                    Button(onClick = { AppnavController.navigate(AppScreens.HomeMainScreen.route) },
+                    Button(onClick = { AppnavController.navigate(AppScreens.HomeMainScreen.route)
+                                     val newUser = LoginRequest(
+                                         email = useremailvalue.value,
+                                         password = userpasswordvalue.value
+                                     )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            // Call the createUser method from the RemoteRepo
+                            val result = remoteRepo.loginUser(newUser)
+                            // Handle the result as needed
+                        }
+
+
+                                     },
                         modifier = Modifier.size(width = 150.dp, height = 50.dp),
                         colors= ButtonDefaults.buttonColors(
                         containerColor = Color.Black,

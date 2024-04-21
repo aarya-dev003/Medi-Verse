@@ -37,11 +37,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
+import com.example.medi_verse.repository.RemoteRepo
+import com.example.requests.ClubLoginRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClubAdLogin(AppnavController: NavController) {
+fun ClubAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -111,7 +116,18 @@ fun ClubAdLogin(AppnavController: NavController) {
                     shape = RoundedCornerShape(12.dp)
 
                 )
-                Button(onClick = { AppnavController.navigate(AppScreens.ClubAdminMainScreen.route) },
+                Button(onClick = { AppnavController.navigate(AppScreens.ClubAdminMainScreen.route)
+                                 val club = ClubLoginRequest(
+                                     username = useremailvalue.value,
+                                     password = userpasswordvalue.value
+                                 )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        // Call the createUser method from the RemoteRepo
+                        val result = remoteRepo.loginClub(club)
+                        // Handle the result as needed
+                    }
+
+                                 },
                     modifier = Modifier.size(width = 150.dp, height = 50.dp),
                     colors= ButtonDefaults.buttonColors(
                         containerColor = Color.Black,

@@ -37,10 +37,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
+import com.example.medi_verse.data.remote.model.LoginRequest
+import com.example.medi_verse.repository.RemoteRepo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollegeAdLogin(AppnavController: NavController) {
+fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
 
     Box(
         modifier = Modifier
@@ -111,7 +116,18 @@ fun CollegeAdLogin(AppnavController: NavController) {
                     shape = RoundedCornerShape(12.dp)
 
                 )
-                Button(onClick = { AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route) },
+                Button(onClick = { AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route)
+                    val admin = LoginRequest(
+                        email = useremailvalue.value,
+                        password = userpasswordvalue.value
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        // Call the createUser method from the RemoteRepo
+
+                        val result = remoteRepo.loginAdmin(admin)
+                        // Handle the result as needed
+                    }
+                                 },
                     modifier = Modifier.size(width = 150.dp, height = 50.dp),
                     colors= ButtonDefaults.buttonColors(
                         containerColor = Color.Black,
