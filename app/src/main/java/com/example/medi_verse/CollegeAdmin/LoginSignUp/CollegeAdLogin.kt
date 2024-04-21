@@ -39,6 +39,7 @@ import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -123,9 +124,17 @@ fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                     )
                     CoroutineScope(Dispatchers.IO).launch {
                         // Call the createUser method from the RemoteRepo
+                        when (val loginResult = remoteRepo.loginAdmin(admin)) {
+                            is Result.Success -> {
 
-                        val result = remoteRepo.loginAdmin(admin)
-                        // Handle the result as needed
+                            }
+                            is Result.Error -> {
+
+                            }
+                            else -> {
+
+                            }
+                        }
                     }
                                  },
                     modifier = Modifier.size(width = 150.dp, height = 50.dp),

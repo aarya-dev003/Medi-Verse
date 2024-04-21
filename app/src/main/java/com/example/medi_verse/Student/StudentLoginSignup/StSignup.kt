@@ -37,6 +37,7 @@ import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
 import com.example.medi_verse.data.remote.model.RegisterRequest
 import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -167,8 +168,17 @@ fun StSignup(AppnavController: NavController, remoteRepo: RemoteRepo) {
                 // Launch a coroutine scope
                 CoroutineScope(Dispatchers.IO).launch {
                     // Call the createUser method from the RemoteRepo
-                    val result = remoteRepo.createUser(newUser)
-                    // Handle the result as needed
+                    when (val loginResult = remoteRepo.createUser(newUser)) {
+                        is Result.Success -> {
+
+                        }
+                        is Result.Error -> {
+
+                        }
+                        else -> {
+
+                        }
+                    }
                 }
                              },
                 modifier = Modifier.size(width = 150.dp, height = 50.dp),

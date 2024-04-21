@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
 import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
 import com.example.requests.ClubLoginRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -123,8 +124,17 @@ fun ClubAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                                  )
                     CoroutineScope(Dispatchers.IO).launch {
                         // Call the createUser method from the RemoteRepo
-                        val result = remoteRepo.loginClub(club)
-                        // Handle the result as needed
+                        when (val loginResult = remoteRepo.loginClub(club)) {
+                            is Result.Success -> {
+
+                            }
+                            is Result.Error -> {
+
+                            }
+                            else -> {
+
+                            }
+                        }
                     }
 
                                  },
