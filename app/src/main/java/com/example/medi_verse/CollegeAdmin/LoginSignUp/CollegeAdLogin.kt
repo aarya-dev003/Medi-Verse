@@ -37,15 +37,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
-import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.repository.RemoteRepo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
+fun CollegeAdLogin(AppnavController: NavController,remoteRepo: RemoteRepo) {
 
     Box(
         modifier = Modifier
@@ -116,18 +112,7 @@ fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                     shape = RoundedCornerShape(12.dp)
 
                 )
-                Button(onClick = { AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route)
-                    val admin = LoginRequest(
-                        email = useremailvalue.value,
-                        password = userpasswordvalue.value
-                    )
-                    CoroutineScope(Dispatchers.IO).launch {
-                        // Call the createUser method from the RemoteRepo
-
-                        val result = remoteRepo.loginAdmin(admin)
-                        // Handle the result as needed
-                    }
-                                 },
+                Button(onClick = { AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route) },
                     modifier = Modifier.size(width = 150.dp, height = 50.dp),
                     colors= ButtonDefaults.buttonColors(
                         containerColor = Color.Black,
@@ -136,31 +121,6 @@ fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                     Text(text = "Login")
                 }
 
-                Row (
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ){
-                    Text(text = "Don't have an Account yet?")
-                    val clickableText = "Signup"
-                    ClickableText(
-                        text = AnnotatedString.Builder(clickableText)
-                            .apply {
-                                addStyle(
-                                    style = SpanStyle(
-                                        color = Color.Black,
-                                        textDecoration = TextDecoration.Underline
-                                    ),
-                                    start = 0,
-                                    end = clickableText.length
-                                )
-                            }
-                            .toAnnotatedString(),
-                        style = TextStyle(fontWeight = FontWeight.Bold),
-                        onClick = {
-                            AppnavController.navigate(AppScreens.ClubAdSignUp.route)
-
-                        }
-                    )
-                }
             }
 
         }

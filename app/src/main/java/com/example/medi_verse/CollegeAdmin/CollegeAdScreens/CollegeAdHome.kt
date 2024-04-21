@@ -1,5 +1,6 @@
 package com.example.medi_verse.CollegeAdmin.CollegeAdScreens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,11 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.medi_verse.ui.theme.BackgroundColor
 
-@Preview
 @Composable
-fun CollegeAdHome() {
+fun CollegeAdHome(navController: NavController) {
     Box(modifier = Modifier
         .background(BackgroundColor)
         .fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -59,6 +60,9 @@ fun CollegeAdHome() {
                 }
             }
         }
+    }
+    BackHandler {
+        System.exit(0)
     }
 }
 @Composable
