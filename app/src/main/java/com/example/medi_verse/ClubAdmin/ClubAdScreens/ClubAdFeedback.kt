@@ -1,6 +1,7 @@
 package com.example.medi_verse.ClubAdmin.ClubAdScreens
 
 //noinspection UsingMaterialAndMaterial3Libraries
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,11 +28,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.ui.theme.BackgroundColor
 
-@Preview(widthDp = 250, heightDp = 500)
 @Composable
-fun ClubAdFeedback() {
+fun ClubAdFeedback(navController: NavController) {
     Box(modifier = Modifier
         .background(BackgroundColor)
         .fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -58,6 +60,13 @@ fun ClubAdFeedback() {
                 this.items(items) { item ->
                     FeedbackLayout(item = item)
                 }
+            }
+        }
+    }
+    BackHandler {
+        navController.navigate(route = ClubAdminBottomBarScreen.Home.route) {
+            popUpTo(route = ClubAdminBottomBarScreen.Home.route) {
+                inclusive = true
             }
         }
     }

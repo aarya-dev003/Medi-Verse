@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -62,13 +63,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import coil.request.ImageRequest
 import com.example.medi_verse.R
+import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun StHome(context: Context) {
+fun StHome(context: Context,navController: NavController) {
     val scope= rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
     val items =
@@ -162,6 +165,14 @@ fun StHome(context: Context) {
             )
         }
     )
+//    navController.navigate(route = HomeBottomBarScreen.Home.route) {
+//        popUpTo(route = HomeBottomBarScreen.Home.route) {
+//            inclusive = true
+//        }
+//    }
+    BackHandler {
+        System.exit(0)
+    }
 }
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn( ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)

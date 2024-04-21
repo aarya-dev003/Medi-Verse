@@ -135,32 +135,6 @@ fun ClubAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                     ), ) {
                     Text(text = "Login")
                 }
-
-                Row (
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ){
-                    Text(text = "Don't have an Account yet?")
-                    val clickableText = "Signup"
-                    ClickableText(
-                        text = AnnotatedString.Builder(clickableText)
-                            .apply {
-                                addStyle(
-                                    style = SpanStyle(
-                                        color = Color.Black,
-                                        textDecoration = TextDecoration.Underline
-                                    ),
-                                    start = 0,
-                                    end = clickableText.length
-                                )
-                            }
-                            .toAnnotatedString(),
-                        style = TextStyle(fontWeight = FontWeight.Bold),
-                        onClick = {
-                            AppnavController.navigate(AppScreens.CollegeAdSignup.route)
-
-                        }
-                    )
-                }
             }
 
         }

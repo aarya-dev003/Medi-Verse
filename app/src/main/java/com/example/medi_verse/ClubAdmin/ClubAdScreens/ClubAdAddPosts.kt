@@ -3,6 +3,7 @@ package com.example.medi_verse.ClubAdmin.ClubAdScreens
 import android.content.Context
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -40,13 +41,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.R
 import com.example.medi_verse.ui.theme.BackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClubAdAddPosts (context: Context) {
+fun ClubAdAddPosts (context: Context,navController: NavController) {
     Box(modifier = Modifier
         .background(BackgroundColor)
         .fillMaxSize(), contentAlignment = Alignment.TopCenter){
@@ -144,6 +147,13 @@ fun ClubAdAddPosts (context: Context) {
                 )
             ) {
                 Text(text = "Post")
+            }
+        }
+    }
+    BackHandler {
+        navController.navigate(route = ClubAdminBottomBarScreen.Home.route) {
+            popUpTo(route = ClubAdminBottomBarScreen.Home.route) {
+                inclusive = true
             }
         }
     }

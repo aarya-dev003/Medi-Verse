@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.medi_verse.ClubAdmin.ClubAdLoginSignUp.ClubAdLogin
-import com.example.medi_verse.ClubAdmin.ClubAdLoginSignUp.ClubAdSignup
 import com.example.medi_verse.ClubAdmin.ClubAdminMainScreen
 import com.example.medi_verse.CollegeAdmin.CollegeAdminMainScreen
 import com.example.medi_verse.CollegeAdmin.LoginSignUp.CollegeAdLogin
@@ -35,9 +34,7 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
         composable(route= AppScreens.StSignUp.route){
             StSignup(AppnavController = navController, remoteRepo)
         }
-        composable(route= AppScreens.ClubAdSignUp.route){
-            ClubAdSignup(AppnavController = navController)
-        }
+
         composable(route= AppScreens.ClubAdLogin.route){
             ClubAdLogin(AppnavController = navController, remoteRepo)
         }

@@ -14,13 +14,13 @@ import com.example.medi_verse.ClubAdmin.ClubAdScreens.ClubAdHome
 fun ClubAdminBottomNavGraph(ClubnavController:NavHostController,context: Context) {
     NavHost(navController = ClubnavController, startDestination = ClubAdminBottomBarScreen.Home.route ){
         composable(route= ClubAdminBottomBarScreen.Home.route){
-            ClubAdHome(context = context)
+            ClubAdHome(context = context,ClubnavController)
         }
         composable(route= ClubAdminBottomBarScreen.AddPost.route){
-            ClubAdAddPosts(context)
+            ClubAdAddPosts(context,ClubnavController)
         }
         composable(route= ClubAdminBottomBarScreen.Feedback.route){
-            ClubAdFeedback()
+            ClubAdFeedback(ClubnavController)
         }
     }
 }

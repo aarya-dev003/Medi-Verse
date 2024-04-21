@@ -1,6 +1,7 @@
 package com.example.medi_verse.ClubAdmin.ClubAdScreens
 
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.R
 import com.example.medi_verse.Student.StScreens.DrawerItem
 import com.example.medi_verse.Student.StScreens.ScafoldContent
@@ -46,7 +49,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun ClubAdHome(context: Context) {
+fun ClubAdHome(context: Context,navController: NavController) {
 
     val scope= rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -141,4 +144,7 @@ fun ClubAdHome(context: Context) {
             )
         }
     )
+    BackHandler {
+        System.exit(0)
+    }
 }

@@ -15,13 +15,14 @@ fun HomeBottomNavGraph(HomenavController: NavHostController, context: Context) {
     NavHost(navController = HomenavController,
         startDestination = HomeBottomBarScreen.Home.route ){
         composable(route = HomeBottomBarScreen.Home.route){
-            StHome(context)
+            StHome(context,HomenavController)
         }
         composable(route = HomeBottomBarScreen.Announcements.route){
-            StAnnouncements()
+            StAnnouncements(HomenavController)
+
         }
         composable(route = HomeBottomBarScreen.Feedback.route){
-            StFeedback()
+            StFeedback(HomenavController)
         }
         composable(route = HomeBottomBarScreen.StLogin.route){
 

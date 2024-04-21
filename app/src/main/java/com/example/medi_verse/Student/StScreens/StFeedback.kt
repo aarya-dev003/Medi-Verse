@@ -1,5 +1,6 @@
 package com.example.medi_verse.Student.StScreens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
@@ -40,6 +41,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -48,7 +51,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun StFeedback() {
+fun StFeedback(navController: NavController) {
     val pagerState = rememberPagerState()
     val pages = listOf("Campus","Clubs","Others")
     val defaultIndicator = @Composable { tabPositions: List<TabPosition> ->
@@ -130,7 +133,8 @@ fun StFeedback() {
                         Button(
                             onClick = {},
                             modifier = Modifier
-                                .padding(top = 10.dp).align(Alignment.CenterHorizontally),
+                                .padding(top = 10.dp)
+                                .align(Alignment.CenterHorizontally),
                             colors=ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF13315C),
                                 contentColor = Color.White,
@@ -143,6 +147,15 @@ fun StFeedback() {
                 }
             }
         }
+
+
+    BackHandler {
+    navController.navigate(route = HomeBottomBarScreen.Home.route) {
+        popUpTo(route = HomeBottomBarScreen.Home.route) {
+            inclusive = true
+        }
+    }
+    }
 }
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -182,4 +195,6 @@ private fun CustomIndicator(tabPositions: List<TabPosition>, pagerState: PagerSt
             .background(color = Color.White, RoundedCornerShape(50))
             .zIndex(1f)
     )
+
 }
+

@@ -2,6 +2,7 @@
 package com.example.medi_verse.Student.StScreens
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,12 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.medi_verse.R
+import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview(widthDp = 384, heightDp = 630)
 @Composable
-fun StAnnouncements() {
+fun StAnnouncements(navController: NavController) {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color(0xFFD7E3FC)))
@@ -57,6 +60,18 @@ fun StAnnouncements() {
             .padding(bottom = 56.dp)) {
             items(AnnoucementsDataList()) { item ->
                 AnnoucementLayout(item.img, item.annoucement)
+            }
+        }
+    }
+//    navController.navigate(route = HomeBottomBarScreen.Home.route) {
+//        popUpTo(route = HomeBottomBarScreen.Home.route) {
+//            inclusive = true
+//        }
+//    }
+    BackHandler {
+        navController.navigate(route = HomeBottomBarScreen.Home.route) {
+            popUpTo(route = HomeBottomBarScreen.Home.route) {
+                inclusive = true
             }
         }
     }
@@ -89,6 +104,7 @@ fun AnnoucementLayout(img: Int, annoucement: String) {
             }
         }
     }
+
 }
 data class AnnoucementsCustomDatatype(val img:Int,val annoucement:String)
 fun AnnoucementsDataList(): MutableList<AnnoucementsCustomDatatype> {
