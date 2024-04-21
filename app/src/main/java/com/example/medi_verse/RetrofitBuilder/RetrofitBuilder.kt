@@ -1,6 +1,9 @@
 package com.example.medi_verse.RetrofitBuilder
 
 import com.example.medi_verse.data.remote.ApiService
+import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.repository.RemoteRepoImpl
+import com.example.medi_verse.utils.SessionManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -28,3 +31,14 @@ fun provideApiService(moshi: Moshi) : ApiService = Retrofit
         addConverterFactory(MoshiConverterFactory.create(moshi))
         build()
     }.create(ApiService::class.java)
+
+
+fun provideRemoteRepo(
+    apiService: ApiService,
+    sessionManager: SessionManager
+): RemoteRepo{
+    return RemoteRepoImpl(
+        apiService,
+        sessionManager
+    )
+}

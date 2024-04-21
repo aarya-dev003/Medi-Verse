@@ -50,4 +50,9 @@ object Constants {
     const val SEARCH_ANNOUNCEMENT = "$API_VERSION/$ANNOUNCEMENT_TYPE/search"
 
 
+
+    //Datastore
+    private const val USER_PREFERENCES_NAME = "session_manager"
+
+
 }
