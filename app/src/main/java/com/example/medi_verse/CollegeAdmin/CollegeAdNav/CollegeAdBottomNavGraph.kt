@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.medi_verse.CollegeAdmin.CollegeAdNav.CollegeAdBottomBarScreen
 import com.example.medi_verse.CollegeAdmin.CollegeAdScreens.CollegeAdAnnoucements
 import com.example.medi_verse.CollegeAdmin.CollegeAdScreens.CollegeAdHome
+import com.example.medi_verse.CollegeAdmin.CollegeAdScreens.RegisterCollegeAdmin
 
 @Composable
 fun CollegeAdBottomNavGraph (CollegenavController: NavHostController, context: Context){
@@ -17,6 +18,9 @@ fun CollegeAdBottomNavGraph (CollegenavController: NavHostController, context: C
         }
         composable(route= CollegeAdBottomBarScreen.Announcements.route){
             CollegeAdAnnoucements(context = context,CollegenavController)
+        }
+        composable(route= CollegeAdBottomBarScreen.RegisterClubAdmin.route){
+           RegisterCollegeAdmin()
         }
     }
 

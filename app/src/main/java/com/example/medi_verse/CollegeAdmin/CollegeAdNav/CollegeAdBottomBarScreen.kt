@@ -18,4 +18,9 @@ sealed class CollegeAdBottomBarScreen(
         title = "Announcements",
         drawableId = R.drawable.annoucements
     )
+    object RegisterClubAdmin : CollegeAdBottomBarScreen(
+        route = "RegisterClubAdmin",
+        title = "Register",
+        drawableId = R.drawable.register
+    )
 }
