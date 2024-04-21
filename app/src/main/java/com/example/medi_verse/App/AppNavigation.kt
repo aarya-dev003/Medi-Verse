@@ -14,9 +14,10 @@ import com.example.medi_verse.CollegeAdmin.LoginSignUp.CollegeAdSignup
 import com.example.medi_verse.Student.HomeMainScreen
 import com.example.medi_verse.Student.StudentLoginSignup.StSignup
 import com.example.medi_verse.Student.StudentLoginSignup.StLogin
+import com.example.medi_verse.repository.RemoteRepo
 
 @Composable
-fun AppNavigation(context: Context) {
+fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
     val navController= rememberNavController()
     NavHost(navController =navController , startDestination = AppScreens.FirstPage.route ){
         composable(route= AppScreens.FirstPage.route){
@@ -32,7 +33,7 @@ fun AppNavigation(context: Context) {
             HomeMainScreen(context = context)
         }
         composable(route= AppScreens.StSignUp.route){
-            StSignup(AppnavController = navController)
+            StSignup(AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.ClubAdSignUp.route){
             ClubAdSignup(AppnavController = navController)

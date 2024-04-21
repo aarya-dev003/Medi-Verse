@@ -35,10 +35,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
+import com.example.medi_verse.data.remote.model.RegisterRequest
+import com.example.medi_verse.repository.RemoteRepo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StSignup(AppnavController: NavController) {
+fun StSignup(AppnavController: NavController, remoteRepo: RemoteRepo) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -151,7 +156,21 @@ fun StSignup(AppnavController: NavController) {
                 textStyle = TextStyle(color = Color.Black),
                 shape = RoundedCornerShape(12.dp)
             )
-            Button(onClick = { AppnavController.navigate(AppScreens.HomeMainScreen.route) },
+            Button(onClick = { AppnavController.navigate(AppScreens.HomeMainScreen.route)
+                val newUser = RegisterRequest(
+                    name = newusernamevalue.value,
+                    username = newuserusernamevalue.value,
+                    password = newuserpasswordvalue.value,
+                    email = newuseremailvalue.value
+                )
+
+                // Launch a coroutine scope
+                CoroutineScope(Dispatchers.IO).launch {
+                    // Call the createUser method from the RemoteRepo
+                    val result = remoteRepo.createUser(newUser)
+                    // Handle the result as needed
+                }
+                             },
                 modifier = Modifier.size(width = 150.dp, height = 50.dp),
                 colors= ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
