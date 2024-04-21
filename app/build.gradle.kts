@@ -87,6 +87,7 @@ dependencies {
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-moshi:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     //koin dependency
     implementation("io.insert-koin:koin-android:3.6.0-wasm-alpha2")
