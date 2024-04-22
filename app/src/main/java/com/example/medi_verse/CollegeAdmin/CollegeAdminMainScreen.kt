@@ -37,7 +37,8 @@ fun CollegeAdminMainScreen(context:Context) {
 fun CollegeAdminBottomBar(navController: NavHostController) {
     val screens = listOf(
         CollegeAdBottomBarScreen.Home,
-        CollegeAdBottomBarScreen.Announcements
+        CollegeAdBottomBarScreen.Announcements,
+        CollegeAdBottomBarScreen.RegisterClubAdmin
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

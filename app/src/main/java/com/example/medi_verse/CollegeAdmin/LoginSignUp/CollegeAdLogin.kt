@@ -1,8 +1,5 @@
 package com.example.medi_verse.CollegeAdmin.LoginSignUp
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,16 +37,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
-import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.repository.RemoteRepo
-import com.example.medi_verse.utils.Result
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollegeAdLogin(context: Context,AppnavController: NavController, remoteRepo: RemoteRepo) {
+fun CollegeAdLogin(AppnavController: NavController,remoteRepo: RemoteRepo) {
 
     Box(
         modifier = Modifier
@@ -120,27 +112,7 @@ fun CollegeAdLogin(context: Context,AppnavController: NavController, remoteRepo:
                     shape = RoundedCornerShape(12.dp)
 
                 )
-                Button(onClick = {
-                    val admin = LoginRequest(
-                        email = useremailvalue.value,
-                        password = userpasswordvalue.value
-                    )
-                    CoroutineScope(Dispatchers.IO).launch {
-                        // Call the createUser method from the RemoteRepo
-                        when (val loginResult = remoteRepo.loginAdmin(admin)) {
-                            is Result.Success -> {
-                                AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route)
-                                Log.d("College Login", "$loginResult")
-                            }
-                            is Result.Error -> {
-                                Toast.makeText(context,"INvalid ",Toast.LENGTH_SHORT)
-                            }
-                            else -> {
-
-                            }
-                        }
-                    }
-                                 },
+                Button(onClick = { AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route) },
                     modifier = Modifier.size(width = 150.dp, height = 50.dp),
                     colors= ButtonDefaults.buttonColors(
                         containerColor = Color.Black,
@@ -149,31 +121,6 @@ fun CollegeAdLogin(context: Context,AppnavController: NavController, remoteRepo:
                     Text(text = "Login")
                 }
 
-                Row (
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ){
-                    Text(text = "Don't have an Account yet?")
-                    val clickableText = "Signup"
-                    ClickableText(
-                        text = AnnotatedString.Builder(clickableText)
-                            .apply {
-                                addStyle(
-                                    style = SpanStyle(
-                                        color = Color.Black,
-                                        textDecoration = TextDecoration.Underline
-                                    ),
-                                    start = 0,
-                                    end = clickableText.length
-                                )
-                            }
-                            .toAnnotatedString(),
-                        style = TextStyle(fontWeight = FontWeight.Bold),
-                        onClick = {
-                            AppnavController.navigate(AppScreens.ClubAdSignUp.route)
-
-                        }
-                    )
-                }
             }
 
         }

@@ -9,7 +9,6 @@ import com.example.medi_verse.ClubAdmin.ClubAdLoginSignUp.ClubAdLogin
 import com.example.medi_verse.ClubAdmin.ClubAdminMainScreen
 import com.example.medi_verse.CollegeAdmin.CollegeAdminMainScreen
 import com.example.medi_verse.CollegeAdmin.LoginSignUp.CollegeAdLogin
-import com.example.medi_verse.CollegeAdmin.LoginSignUp.CollegeAdSignup
 import com.example.medi_verse.Student.HomeMainScreen
 import com.example.medi_verse.Student.StudentLoginSignup.StLogin
 import com.example.medi_verse.Student.StudentLoginSignup.StSignup
@@ -48,8 +47,6 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
             CollegeAdLogin(context,AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.CollegeAdSignup.route){
-            CollegeAdSignup(AppnavController = navController)
         }
-
     }
 }

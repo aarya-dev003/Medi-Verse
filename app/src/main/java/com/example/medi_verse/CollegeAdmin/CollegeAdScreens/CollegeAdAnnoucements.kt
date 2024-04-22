@@ -2,6 +2,7 @@ package com.example.medi_verse.CollegeAdmin.CollegeAdScreens
 
 import android.content.Context
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,11 +31,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.medi_verse.CollegeAdmin.CollegeAdNav.CollegeAdBottomBarScreen
 import com.example.medi_verse.ui.theme.BackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollegeAdAnnoucements(context:Context) {
+fun CollegeAdAnnoucements(context:Context,navController: NavController) {
     Box(modifier = Modifier
         .background(BackgroundColor)
         .fillMaxSize(), contentAlignment = Alignment.TopCenter){
@@ -92,4 +95,10 @@ fun CollegeAdAnnoucements(context:Context) {
             }
         }
     }
-}
+    BackHandler {
+        navController.navigate(route = CollegeAdBottomBarScreen.Home.route) {
+            popUpTo(route = CollegeAdBottomBarScreen.Home.route) {
+                inclusive = true
+            }
+        }
+    }}
