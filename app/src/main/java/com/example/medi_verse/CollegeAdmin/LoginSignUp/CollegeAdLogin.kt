@@ -1,5 +1,8 @@
 package com.example.medi_verse.CollegeAdmin.LoginSignUp
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,7 +49,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
+fun CollegeAdLogin(context: Context,AppnavController: NavController, remoteRepo: RemoteRepo) {
 
     Box(
         modifier = Modifier
@@ -117,7 +120,7 @@ fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                     shape = RoundedCornerShape(12.dp)
 
                 )
-                Button(onClick = { AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route)
+                Button(onClick = {
                     val admin = LoginRequest(
                         email = useremailvalue.value,
                         password = userpasswordvalue.value
@@ -126,10 +129,11 @@ fun CollegeAdLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                         // Call the createUser method from the RemoteRepo
                         when (val loginResult = remoteRepo.loginAdmin(admin)) {
                             is Result.Success -> {
-
+                                AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route)
+                                Log.d("College Login", "$loginResult")
                             }
                             is Result.Error -> {
-
+                                Toast.makeText(context,"INvalid ",Toast.LENGTH_SHORT)
                             }
                             else -> {
 

@@ -1,6 +1,7 @@
 package com.example.medi_verse.repository
 
 import com.example.medi_verse.data.remote.model.LoginRequest
+import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
 import com.example.medi_verse.utils.Result
 import com.example.requests.ClubLoginRequest
@@ -20,5 +21,13 @@ interface RemoteRepo {
 
     //for collegeAdmin
     suspend fun loginAdmin(admin: LoginRequest): Result<String>
+
+
+    //posts
+    suspend fun createPost(post : Post) : Result<String>
+
+    suspend fun retrievePostClub() : Result<String>
+
+//    suspend fun retrievePostUser() : Result<String>
 
 }

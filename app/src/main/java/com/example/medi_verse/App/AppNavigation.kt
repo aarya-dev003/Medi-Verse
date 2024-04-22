@@ -45,7 +45,7 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
             CollegeAdminMainScreen(context)
         }
         composable(route= AppScreens.CollegeAdLogin.route){
-            CollegeAdLogin(AppnavController = navController, remoteRepo)
+            CollegeAdLogin(context,AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.CollegeAdSignup.route){
             CollegeAdSignup(AppnavController = navController)

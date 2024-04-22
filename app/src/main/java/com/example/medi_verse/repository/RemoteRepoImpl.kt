@@ -2,6 +2,7 @@ package com.example.medi_verse.repository
 
 import com.example.medi_verse.data.remote.ApiService
 import com.example.medi_verse.data.remote.model.LoginRequest
+import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
 import com.example.medi_verse.utils.Result
 import com.example.medi_verse.utils.Result.Error
@@ -109,7 +110,58 @@ class RemoteRepoImpl (
     }
 
     override suspend fun loginAdmin(admin: LoginRequest): Result<String> {
-        TODO("Not yet implemented")
+        return try{
+            if (!isNetworkConnected(sessionManager.context)) {
+                Error("No Internet Connection!", "")
+            } else {
+                val result = apiService.loginAdmin(admin)
+                val name = sessionManager.getCurrentUsername()
+                result.let {
+                    name?.let { it1 ->
+                        sessionManager.updateSession(
+                            token = it.token ?: "",
+                            name = it1,
+                            email = admin.email
+                        )
+                    }
+                    Success("Admin Login Successfully!!")
+                } ?: Error("Some Error Occurred", "")
+            }
+        } catch (e : Exception) {
+            Error(e.message ?: "Some Problem Occurred!", "")
+        }
+    }
+
+    override suspend fun createPost(post: Post): Result<String> {
+        try {
+            val token = sessionManager.getJwtToken()
+                ?: return Result.Success("Post will be saved in Local Database")
+
+            val result = apiService.createPost("Bearer $token", post)
+
+            return Result.Success(result)
+        } catch (e: Exception) {
+            return Result.Error("An error occurred while creating post","")
+        }
+    }
+
+    override suspend fun retrievePostClub(): Result<String> {
+        try{
+            val token = sessionManager.getJwtToken()
+                ?: return Result.Error("jwt token does not exits", "")
+
+            val result = apiService.retrievePost("Bearer $token")
+
+            if(result != null){
+                return Result.Success("$result", "Post retrieved successfully")
+
+            }else{
+                return  Result.Error("Error Retrieving post",result)
+            }
+
+        }catch (e:Exception){
+            return Result.Error("An error occurred while creating post","")
+        }
     }
 
 
