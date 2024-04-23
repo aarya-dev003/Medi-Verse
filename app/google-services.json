@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "257572792999",
-    "project_id": "medi-verse-d8b7e",
-    "storage_bucket": "medi-verse-d8b7e.appspot.com"
+    "project_number": "373719016048",
+    "project_id": "medi-ver",
+    "storage_bucket": "medi-ver.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:257572792999:android:1ae12ca32643b143ab0982",
+        "mobilesdk_app_id": "1:373719016048:android:13bde76fe09837675c8ab5",
         "android_client_info": {
           "package_name": "com.example.medi_verse"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC_tT19tfCBkr26LoNdgVsvgK1DaCVDGTY"
+          "current_key": "AIzaSyD-An-txLBlFal1jG6Db5fe8fTRZ64oJCI"
         }
       ],
       "services": {

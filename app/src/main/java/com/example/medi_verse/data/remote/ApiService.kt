@@ -12,6 +12,7 @@ import com.example.utils.Constants.LOGIN_CLUB_ADMIN
 import com.example.utils.Constants.LOGIN_END_POINT
 import com.example.utils.Constants.REGISTER_END_POINT
 import com.example.utils.Constants.RETRIEVE_END_POINT
+import com.example.utils.Constants.RETRIEVE_END_POINT_USER
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -69,11 +70,15 @@ interface ApiService {
     @Headers("Content-Type: application/json")
     @GET(RETRIEVE_END_POINT)
     suspend fun retrievePost(
-        @Header("Authorization") token:String,
+        @Header("Authorization") token:String
     ): List<GetPost>
 
 
-
+    @Headers("Content-Type: application/json")
+    @GET(RETRIEVE_END_POINT_USER)
+    suspend fun retrievePostUser(
+        @Header("Authorization") token:String
+    ): List<GetPost>
 
 
 

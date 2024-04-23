@@ -21,7 +21,7 @@ class RemoteRepoImpl (
                 Error("No Internet Connection!", "")
             } else {
                 val result = apiService.createUserAccount(user)
-
+                sessionManager.createLoginContext("user")
                 result.let {
                     sessionManager.updateSession(
                         token = it.token ?: "",
@@ -43,6 +43,7 @@ class RemoteRepoImpl (
             } else {
                 val result = apiService.loginUser(user)
                 val name = sessionManager.getCurrentUsername()
+                sessionManager.createLoginContext("user")
                 result.let {
                     name?.let { it1 ->
                         sessionManager.updateSession(
@@ -60,6 +61,7 @@ class RemoteRepoImpl (
     }
     override suspend fun getUser(): Result<RegisterRequest> {
         return try {
+            val context = sessionManager.getLoginContext()
             val name = sessionManager.getCurrentUsername()
             val email = sessionManager.getCurrentEmail()
             if (name == null || email == null) {
@@ -93,6 +95,7 @@ class RemoteRepoImpl (
             } else {
                 val result = apiService.loginClub(club)
                 val name = sessionManager.getCurrentUsername()
+                sessionManager.createLoginContext("club")
                 result.let {
                     name?.let { it1 ->
                         sessionManager.updateSession(
@@ -116,6 +119,7 @@ class RemoteRepoImpl (
             } else {
                 val result = apiService.loginAdmin(admin)
                 val name = sessionManager.getCurrentUsername()
+                sessionManager.createLoginContext("admin")
                 result.let {
                     name?.let { it1 ->
                         sessionManager.updateSession(
@@ -160,7 +164,24 @@ class RemoteRepoImpl (
             }
 
         }catch (e:Exception){
-            return Result.Error("An error occurred while creating post","")
+            return Result.Error("An error occurred while recieving post","")
+        }
+    }
+
+   override suspend fun retrievePostUser(): Result<String>{
+        try {
+            val token = sessionManager.getJwtToken()
+                ?: return Result.Error("No token Exits", "")
+
+            val result = apiService.retrievePostUser("Bearer $token")
+
+            if (result != null){
+                return Result.Success("$result", "Post recieved Successfully")
+            }else{
+                return Result.Error("An error Occurred while retrieving", "$result")
+            }
+        }catch (e: Exception){
+            return Result.Error("Cannot Retrieve", "")
         }
     }
 

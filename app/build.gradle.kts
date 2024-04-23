@@ -66,7 +66,11 @@ dependencies {
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.0")
     implementation("androidx.datastore:datastore-core-android:1.1.0")
+
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.google.firebase:firebase-common-ktx:20.4.3")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

@@ -47,23 +47,39 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.R
 import com.example.medi_verse.ui.theme.BackgroundColor
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 
-private data class ImageWithDescription(val uri: Uri, val description: String)
+private const val TAG ="upload post"
+private fun uploadImageToFirebase(context: Context, imageUri: Uri, description: String) {
+    val storageRef = Firebase.storage.reference
+    val imagesRef = storageRef.child("posts")
+
+    val fileRef = imagesRef.child("image_${System.currentTimeMillis()}.jpg")
+    val uploadTask = fileRef.putFile(imageUri)
+
+    uploadTask.addOnSuccessListener { taskSnapshot ->
+        val imageUrl = taskSnapshot.metadata?.path
+        val imageDescription = description
+        Toast.makeText(context, "Photo posted successfully", Toast.LENGTH_SHORT).show()
+    }.addOnFailureListener { exception ->
+        Log.e(TAG, "Error uploading image: $exception")
+        Toast.makeText(context, "Failed to post photo: ${exception.message}", Toast.LENGTH_SHORT).show()
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClubAdAddPosts (context: Context, navController: NavController) {
+
     Box(modifier = Modifier
         .background(BackgroundColor)
         .fillMaxSize(), contentAlignment = Alignment.TopCenter){
-        var imageUriList by remember {
-            mutableStateOf<List<Uri>>(emptyList())
-        }
+        var imageUri by remember { mutableStateOf<Uri?>(null) }
         val galleryLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetMultipleContents(),
-            onResult = { uriList ->
-                imageUriList = uriList
+            contract = ActivityResultContracts.GetContent(),
+            onResult = { uri ->
+                imageUri = uri
             }
         )
         var check by remember { mutableStateOf(false) }
@@ -79,7 +95,8 @@ fun ClubAdAddPosts (context: Context, navController: NavController) {
             }
             Card(
                 modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp, bottom = 15.dp).fillMaxHeight(.6f),
+                    .padding(start = 20.dp, end = 20.dp, bottom = 15.dp)
+                    .fillMaxHeight(.6f),
                 shape = RoundedCornerShape(15.dp),
                 colors = cardColors
             ) {
@@ -111,16 +128,14 @@ fun ClubAdAddPosts (context: Context, navController: NavController) {
                             alignment = Alignment.Center
                         )
                     }
-                    Row {
-                        imageUriList.forEach { uri ->
-                            Image(
-                                painter = rememberAsyncImagePainter(uri),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .fillMaxSize()
-                            )
-                        }
+                    imageUri?.let { uri ->
+                        Image(
+                            painter = rememberAsyncImagePainter(uri),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .fillMaxSize()
+                        )
                     }
                 }
             }
@@ -137,17 +152,16 @@ fun ClubAdAddPosts (context: Context, navController: NavController) {
                 ),
                 modifier = Modifier
                     .fillMaxHeight(.5f)
-                    .fillMaxWidth(.9f).padding(10.dp, top = 2.dp),
+                    .fillMaxWidth(.9f)
+                    .padding(10.dp, top = 2.dp),
                 shape = RoundedCornerShape(5.dp),
             )
             Button(
                 modifier = Modifier.background(Color.Transparent),
                 onClick = {
-                    val imagesWithDescriptions = imageUriList.map { uri ->
-                        ImageWithDescription(uri, userdes)
-                    }
-                    uploadImagesToFirebase(context, imagesWithDescriptions)
-                    Toast.makeText(context, "Photo posted successfully", Toast.LENGTH_SHORT).show()
+                    imageUri?.let { uri ->
+                        uploadImageToFirebase(context, uri, userdes)
+                    } ?: Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
@@ -166,27 +180,6 @@ fun ClubAdAddPosts (context: Context, navController: NavController) {
         }
     }
 }
-
-private fun uploadImagesToFirebase(context: Context, imageList: List<ImageWithDescription>) {
-    val storageRef = Firebase.storage.reference
-    val imagesRef = storageRef.child("images")
-
-    imageList.forEachIndexed { index, image ->
-        val fileRef = imagesRef.child("image_$index.jpg")
-        val uploadTask = fileRef.putFile(image.uri)
-
-        uploadTask.addOnSuccessListener { taskSnapshot ->
-            Log.d(TAG, "Image uploaded successfully: ${taskSnapshot.metadata?.path}")
-            val imageUrl = taskSnapshot.metadata?.path
-            val imageDescription = image.description
-            Toast.makeText(context, "Photo posted successfully", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener { exception ->
-            Log.e(TAG, "Error uploading image: $exception")
-            Toast.makeText(context, "Failed to post photo: ${exception.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
-private const val TAG = "ClubAdAddPosts"
 
 
 /**import android.content.Context

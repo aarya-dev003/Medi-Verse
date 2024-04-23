@@ -28,6 +28,6 @@ interface RemoteRepo {
 
     suspend fun retrievePostClub() : Result<String>
 
-//    suspend fun retrievePostUser() : Result<String>
+    suspend fun retrievePostUser() : Result<String>
 
 }

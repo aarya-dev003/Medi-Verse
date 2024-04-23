@@ -14,6 +14,20 @@ class SessionManager(val context : Context) {
         name = USER_PREFERENCES_NAME
     )
 
+    suspend fun createLoginContext(applicationContext : String){
+        val contextKey = stringPreferencesKey("CONTEXT_KEY")
+        context.dataStore.edit{preferences->
+            preferences[contextKey] = applicationContext
+        }
+    }
+
+    suspend fun getLoginContext(): String? {
+        val contextKey = stringPreferencesKey("CONTEXT_KEY")
+        val preferences = context.dataStore.data.first()
+
+        return preferences[contextKey]
+    }
+
     suspend fun updateSession(token : String, name : String , email: String){
         val jwtTokenKey = stringPreferencesKey("JWT_TOKEN_KEY")
         val nameKey = stringPreferencesKey("USER_NAME")
