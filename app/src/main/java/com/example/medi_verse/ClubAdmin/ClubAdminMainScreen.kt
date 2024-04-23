@@ -20,16 +20,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomNavGraph
+import com.example.medi_verse.repository.RemoteRepo
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ClubAdminMainScreen(context: Context) {
+fun ClubAdminMainScreen(context: Context, remoteRepo: RemoteRepo) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { ClubAdminBottomBar(navController = navController) }
     ){
-        ClubAdminBottomNavGraph(ClubnavController = navController,context)
+        ClubAdminBottomNavGraph(ClubnavController = navController,context, remoteRepo )
     }
 }
 @Composable

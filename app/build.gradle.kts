@@ -63,6 +63,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("com.android.volley:volley:1.2.1")
+
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.0")
     implementation("androidx.datastore:datastore-core-android:1.1.0")
@@ -82,14 +83,14 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.compose.material3:material3:1.2.1")
-    implementation ("androidx.compose.material:material:1.6.5")
+    implementation ("androidx.compose.material:material:1.6.6")
     implementation ("androidx.navigation:navigation-compose:2.7.7")
 
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation("com.google.accompanist:accompanist-pager:0.27.1")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.27.1")
-    implementation("androidx.compose.foundation:foundation-android:1.6.5")
+    implementation("androidx.compose.foundation:foundation-android:1.6.6")
 
     //retrofit and moshi dependency
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
@@ -104,5 +105,9 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-analytics")
+
+    //coroutines dependency
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
 }

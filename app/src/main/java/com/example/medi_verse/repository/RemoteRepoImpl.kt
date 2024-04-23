@@ -1,5 +1,6 @@
 package com.example.medi_verse.repository
 
+import android.util.Log
 import com.example.medi_verse.data.remote.ApiService
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
@@ -44,16 +45,16 @@ class RemoteRepoImpl (
                 val result = apiService.loginUser(user)
                 val name = sessionManager.getCurrentUsername()
                 sessionManager.createLoginContext("user")
-                result.let {
-                    name?.let { it1 ->
-                        sessionManager.updateSession(
-                            token = it.token ?: "",
-                            name = it1,
-                            email = user.email
-                        )
-                    }
-                    Success("User Created Successfully!")
-                } ?: Error("Some Error Occurred", "")
+                if (result.token != null) {
+                    sessionManager.updateSession(
+                        token = result.token.toString(),
+                        name = name?: "student",
+                        email = user.email
+                    )
+                    Result.Success(result.token)
+                } else {
+                    Result.Error("Some Error Occurred!", "")
+                }
             }
         } catch (e : Exception) {
             Error(e.message ?: "Some Problem Occurred!", "")
@@ -96,16 +97,16 @@ class RemoteRepoImpl (
                 val result = apiService.loginClub(club)
                 val name = sessionManager.getCurrentUsername()
                 sessionManager.createLoginContext("club")
-                result.let {
-                    name?.let { it1 ->
-                        sessionManager.updateSession(
-                            token = it.token ?: "",
-                            name = it1,
-                            email = club.username
-                        )
-                    }
-                    Success("User Created Successfully!")
-                } ?: Error("Some Error Occurred", "")
+                if (result.token != null) {
+                    sessionManager.updateSession(
+                        token = result.token.toString(),
+                        name = name?: "club",
+                        email = club.username
+                    )
+                    Result.Success(result.token)
+                } else {
+                    Result.Error("Some Error Occurred!", "")
+                }
             }
         } catch (e : Exception) {
             Error(e.message ?: "Some Problem Occurred!", "")
@@ -113,35 +114,44 @@ class RemoteRepoImpl (
     }
 
     override suspend fun loginAdmin(admin: LoginRequest): Result<String> {
-        return try{
+        return try {
             if (!isNetworkConnected(sessionManager.context)) {
-                Error("No Internet Connection!", "")
+                Result.Error("No Internet Connection!","")
             } else {
                 val result = apiService.loginAdmin(admin)
                 val name = sessionManager.getCurrentUsername()
                 sessionManager.createLoginContext("admin")
-                result.let {
-                    name?.let { it1 ->
-                        sessionManager.updateSession(
-                            token = it.token ?: "",
-                            name = it1,
-                            email = admin.email
-                        )
-                    }
-                    Success("Admin Login Successfully!!")
-                } ?: Error("Some Error Occurred", "")
+                if (result.token != null ) {
+                    sessionManager.updateSession(
+                        token = result.token.toString(),
+                        name = name?: "admin",
+                        email = admin.email
+                    )
+                    Result.Success(result.token)
+                } else {
+                    Result.Error("Some Error Occurred!", "")
+                }
             }
-        } catch (e : Exception) {
-            Error(e.message ?: "Some Problem Occurred!", "")
+        } catch (e: Exception) {
+            Result.Error(e.message ?: "Some Problem Occurred!","")
         }
     }
+
 
     override suspend fun createPost(post: Post): Result<String> {
         try {
             val token = sessionManager.getJwtToken()
-                ?: return Result.Success("Post will be saved in Local Database")
 
-            val result = apiService.createPost("Bearer $token", post)
+            if(token == null){
+                Result.Error("JWT Token Not Exits", "")
+            }
+
+            Log.d("token", "$token")
+
+            val result = apiService.createPost(
+                "Bearer $token",
+                post
+            )
 
             return Result.Success(result)
         } catch (e: Exception) {
