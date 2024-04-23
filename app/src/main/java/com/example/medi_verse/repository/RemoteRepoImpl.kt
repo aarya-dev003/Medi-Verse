@@ -2,6 +2,7 @@ package com.example.medi_verse.repository
 
 import android.util.Log
 import com.example.medi_verse.data.remote.ApiService
+import com.example.medi_verse.data.remote.model.Announcement
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
@@ -192,6 +193,24 @@ class RemoteRepoImpl (
             }
         }catch (e: Exception){
             return Result.Error("Cannot Retrieve", "")
+        }
+    }
+
+    override suspend fun createAnnouncement(announcement: Announcement): Result<String> {
+        try{
+            val token = sessionManager.getJwtToken()
+            if(token == null){
+                Result.Error("JWT Token Not Exits", "")
+            }
+
+
+            val result = apiService.createAnnouncement(
+                "Bearer $token",
+                announcement
+            )
+            return Result.Success(result)
+        } catch (e: Exception) {
+            return Result.Error("An error occurred while creating post","")
         }
     }
 

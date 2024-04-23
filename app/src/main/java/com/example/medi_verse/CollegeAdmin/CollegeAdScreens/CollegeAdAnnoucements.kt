@@ -32,12 +32,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.CollegeAdmin.CollegeAdNav.CollegeAdBottomBarScreen
+import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
+import com.example.medi_verse.utils.Result
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollegeAdAnnoucements(context:Context,navController: NavController) {
+fun CollegeAdAnnoucements(context:Context,navController: NavController, remoteRepo: RemoteRepo) {
+    val createAnnouncementResult = remember { mutableStateOf<Result<String>?>(null) }
     Box(modifier = Modifier
         .background(BackgroundColor)
         .fillMaxSize(), contentAlignment = Alignment.TopCenter){
@@ -84,6 +93,14 @@ fun CollegeAdAnnoucements(context:Context,navController: NavController) {
             Button(
                 modifier = Modifier.background(Color.Transparent).padding(start = 140.dp,top=10.dp),
                 onClick = {
+                    val announcement = Announcement(
+                        description = userdes,
+                        timestamp = System.currentTimeMillis()
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val announcementReq = remoteRepo.createAnnouncement(announcement)
+                        createAnnouncementResult.value = announcementReq
+                    }
                     Toast.makeText(context, "Announcement posted successfully", Toast.LENGTH_SHORT).show()
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -94,6 +111,21 @@ fun CollegeAdAnnoucements(context:Context,navController: NavController) {
                 Text(text = "Post")
             }
         }
+        createAnnouncementResult.value?.let { result ->
+            if (result is Result.Success) {
+                navController.navigate(AppScreens.CollegeAdminMainScreen.route) {
+                    popUpTo(AppScreens.CollegeAdminMainScreen.route) {
+                        inclusive = true
+                    }
+                }
+            } else if (result is Result.Error) {
+                Toast.makeText(context, result.errorMessage.toString().trim(), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Some Unexpected Error Occured", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
     }
     BackHandler {
         navController.navigate(route = CollegeAdBottomBarScreen.Home.route) {

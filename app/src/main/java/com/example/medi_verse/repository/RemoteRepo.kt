@@ -1,5 +1,6 @@
 package com.example.medi_verse.repository
 
+import com.example.medi_verse.data.remote.model.Announcement
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
@@ -29,5 +30,7 @@ interface RemoteRepo {
     suspend fun retrievePostClub() : Result<String>
 
     suspend fun retrievePostUser() : Result<String>
+
+    suspend fun createAnnouncement(announcement: Announcement) : Result<String>
 
 }

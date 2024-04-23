@@ -1,5 +1,6 @@
 package com.example.medi_verse.data.remote
 
+import com.example.medi_verse.data.remote.model.Announcement
 import com.example.medi_verse.data.remote.model.AuthResponse
 import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
@@ -7,6 +8,7 @@ import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
 import com.example.requests.ClubLoginRequest
 import com.example.utils.Constants.ADMIN_LOGIN
+import com.example.utils.Constants.CREATE_ANNOUNCEMENT
 import com.example.utils.Constants.CREATE_END_POINT
 import com.example.utils.Constants.LOGIN_CLUB_ADMIN
 import com.example.utils.Constants.LOGIN_END_POINT
@@ -79,6 +81,13 @@ interface ApiService {
     suspend fun retrievePostUser(
         @Header("Authorization") token:String
     ): List<GetPost>
+
+    @Headers("Content-Type: application/json")
+    @POST(CREATE_ANNOUNCEMENT)
+    suspend fun createAnnouncement(
+        @Header("Authorization") token: String,
+        @Body announcement : Announcement
+    ): String
 
 
 

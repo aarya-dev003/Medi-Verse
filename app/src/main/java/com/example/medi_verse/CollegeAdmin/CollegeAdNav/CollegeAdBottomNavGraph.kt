@@ -9,15 +9,16 @@ import com.example.medi_verse.CollegeAdmin.CollegeAdNav.CollegeAdBottomBarScreen
 import com.example.medi_verse.CollegeAdmin.CollegeAdScreens.CollegeAdAnnoucements
 import com.example.medi_verse.CollegeAdmin.CollegeAdScreens.CollegeAdHome
 import com.example.medi_verse.CollegeAdmin.CollegeAdScreens.RegisterCollegeAdmin
+import com.example.medi_verse.repository.RemoteRepo
 
 @Composable
-fun CollegeAdBottomNavGraph (CollegenavController: NavHostController, context: Context){
+fun CollegeAdBottomNavGraph (CollegenavController: NavHostController, context: Context, remoteRepo: RemoteRepo){
     NavHost(navController = CollegenavController, startDestination = CollegeAdBottomBarScreen.Home.route ){
         composable(route= CollegeAdBottomBarScreen.Home.route){
             CollegeAdHome(CollegenavController)
         }
         composable(route= CollegeAdBottomBarScreen.Announcements.route){
-            CollegeAdAnnoucements(context = context,CollegenavController)
+            CollegeAdAnnoucements(context = context,CollegenavController, remoteRepo )
         }
         composable(route= CollegeAdBottomBarScreen.RegisterClubAdmin.route){
            RegisterCollegeAdmin()

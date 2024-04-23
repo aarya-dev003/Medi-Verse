@@ -20,16 +20,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.medi_verse.CollegeAdmin.CollegeAdNav.CollegeAdBottomBarScreen
 import com.example.medi_verse.CollegeAdmin.CollegeAdNav.CollegeAdBottomNavGraph
+import com.example.medi_verse.repository.RemoteRepo
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CollegeAdminMainScreen(context:Context) {
+fun CollegeAdminMainScreen(context:Context, remoteRepo: RemoteRepo) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { CollegeAdminBottomBar(navController = navController) }
     ){
-        CollegeAdBottomNavGraph(CollegenavController = navController,context)
+        CollegeAdBottomNavGraph(CollegenavController = navController,context, remoteRepo)
     }
 }
 
