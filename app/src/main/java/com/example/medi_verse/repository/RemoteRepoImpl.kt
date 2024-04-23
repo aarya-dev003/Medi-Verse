@@ -196,6 +196,8 @@ class RemoteRepoImpl (
         }
     }
 
+
+    //tasks for college admin
     override suspend fun createAnnouncement(announcement: Announcement): Result<String> {
         try{
             val token = sessionManager.getJwtToken()
@@ -211,6 +213,27 @@ class RemoteRepoImpl (
             return Result.Success(result)
         } catch (e: Exception) {
             return Result.Error("An error occurred while creating post","")
+        }
+    }
+
+    override suspend fun createClubAdmin(club: RegisterRequest): Result<String> {
+        return try {
+            if (!isNetworkConnected(sessionManager.context)) {
+                Result.Error("No Internet Connection!","")
+            } else {
+                val token = sessionManager.getJwtToken()
+                val result = apiService.createClub(
+                    "Bearer $token",
+                    club
+                )
+                if (result.token != null) {
+                    Result.Success("$result", "Club Created Successfully")
+                } else {
+                    Result.Error("Some Error Occurred","")
+                }
+            }
+        } catch (e: Exception) {
+            Result.Error(e.message ?: "Some Problem Occurred!", "")
         }
     }
 

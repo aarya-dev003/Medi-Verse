@@ -21,7 +21,7 @@ fun CollegeAdBottomNavGraph (CollegenavController: NavHostController, context: C
             CollegeAdAnnoucements(context = context,CollegenavController, remoteRepo )
         }
         composable(route= CollegeAdBottomBarScreen.RegisterClubAdmin.route){
-           RegisterCollegeAdmin()
+           RegisterCollegeAdmin(navController = CollegenavController, context = context, remoteRepo =remoteRepo)
         }
     }
 

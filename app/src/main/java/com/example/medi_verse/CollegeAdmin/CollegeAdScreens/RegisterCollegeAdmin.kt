@@ -1,5 +1,7 @@
 package com.example.medi_verse.CollegeAdmin.CollegeAdScreens
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,17 +28,22 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.data.remote.model.LoginRequest
+import com.example.medi_verse.data.remote.model.RegisterRequest
+import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
+import com.example.medi_verse.utils.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun RegisterCollegeAdmin() {
+fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, context: Context) {
+    val createClubResult = remember { mutableStateOf<Result<String>?>(null) }
     Box(
         modifier = Modifier
             .fillMaxSize().background(BackgroundColor),
@@ -147,7 +154,18 @@ fun RegisterCollegeAdmin() {
                 textStyle = TextStyle(color = Color.Black),
                 shape = RoundedCornerShape(12.dp)
             )
-            Button(onClick = { },
+            Button(onClick = {
+                             val registerClub = RegisterRequest(
+                                 name = newusernamevalue.value,
+                                 username = newuserusernamevalue.value,
+                                 email = newuseremailvalue.value,
+                                 password = newuserpasswordvalue.value
+                             )
+                CoroutineScope(Dispatchers.IO).launch {
+                    val result = remoteRepo.createClubAdmin(registerClub)
+                    createClubResult.value = result
+                }
+            },
                 modifier = Modifier.size(width = 150.dp, height = 50.dp),
                 colors= ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
@@ -157,6 +175,19 @@ fun RegisterCollegeAdmin() {
             }
 
 
+        }
+        createClubResult.value?.let { result ->
+            if (result is Result.Success) {
+                navController.navigate(AppScreens.CollegeAdminMainScreen.route) {
+                    popUpTo(AppScreens.CollegeAdminMainScreen.route) {
+                        inclusive = true
+                    }
+                }
+            } else if (result is Result.Error) {
+                Toast.makeText(context, result.errorMessage.toString().trim(), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Some Unexpected Error Occured", Toast.LENGTH_SHORT).show()
+            }
         }
 
     }

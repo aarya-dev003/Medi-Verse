@@ -23,6 +23,7 @@ interface RemoteRepo {
     //for collegeAdmin
     suspend fun loginAdmin(admin: LoginRequest): Result<String>
 
+    suspend fun createClubAdmin(club: RegisterRequest): Result<String>
 
     //posts
     suspend fun createPost(post : Post) : Result<String>
