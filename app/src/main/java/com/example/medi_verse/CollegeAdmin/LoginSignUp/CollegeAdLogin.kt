@@ -1,5 +1,7 @@
 package com.example.medi_verse.CollegeAdmin.LoginSignUp
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,14 +37,22 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
+import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
+import com.example.requests.ClubLoginRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollegeAdLogin(AppnavController: NavController,remoteRepo: RemoteRepo) {
-
+fun CollegeAdLogin(context : Context, AppnavController: NavController, remoteRepo: RemoteRepo) {
+    // State to hold the result of the login attempt
+    val loginResult = remember { mutableStateOf<Result<String>?>(null) }
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -112,7 +122,17 @@ fun CollegeAdLogin(AppnavController: NavController,remoteRepo: RemoteRepo) {
                     shape = RoundedCornerShape(12.dp)
 
                 )
-                Button(onClick = { AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route) },
+                Button(onClick = {
+                    val admin = LoginRequest(
+                        email = useremailvalue.value,
+                        password = userpasswordvalue.value
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        // Call the createUser method from the RemoteRepo
+                        val result = remoteRepo.loginAdmin(admin)
+                        loginResult.value = result
+                    }
+                                 },
                     modifier = Modifier.size(width = 150.dp, height = 50.dp),
                     colors= ButtonDefaults.buttonColors(
                         containerColor = Color.Black,
@@ -121,6 +141,16 @@ fun CollegeAdLogin(AppnavController: NavController,remoteRepo: RemoteRepo) {
                     Text(text = "Login")
                 }
 
+            }
+            // Handle navigation based on login result
+            loginResult.value?.let { result ->
+                if (result is Result.Success) {
+                    AppnavController.navigate(AppScreens.CollegeAdminMainScreen.route)
+                }else if(result is Result.Error){
+                    Toast.makeText(context, result.errorMessage.toString().trim(), Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(context, "Some Unexpected Error Occured", Toast.LENGTH_SHORT).show()
+                }
             }
 
         }

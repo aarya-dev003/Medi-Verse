@@ -1,5 +1,7 @@
 package com.example.medi_verse.Student.StudentLoginSignup
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +49,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
+fun StLogin(context : Context, AppnavController: NavController, remoteRepo: RemoteRepo) {
+    val loginResult = remember { mutableStateOf<Result<String>?>(null) }
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -117,24 +120,15 @@ fun StLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                         shape = RoundedCornerShape(12.dp)
 
                     )
-                    Button(onClick = { AppnavController.navigate(AppScreens.HomeMainScreen.route)
+                    Button(onClick = {
                                      val newUser = LoginRequest(
                                          email = useremailvalue.value,
                                          password = userpasswordvalue.value
                                      )
                         CoroutineScope(Dispatchers.IO).launch {
                             // Call the createUser method from the RemoteRepo
-                            when (val loginResult = remoteRepo.loginUser(newUser)) {
-                                is Result.Success -> {
-
-                                }
-                                is Result.Error -> {
-
-                                }
-                                else -> {
-
-                                }
-                            }
+                            val result = remoteRepo.loginUser(newUser)
+                            loginResult.value = result
                         }
 
 
@@ -173,6 +167,16 @@ fun StLogin(AppnavController: NavController, remoteRepo: RemoteRepo) {
                         )
                     }
                 }
+
+            loginResult.value?.let { result ->
+                if (result is Result.Success) {
+                    AppnavController.navigate(AppScreens.HomeMainScreen.route)
+                }else if(result is Result.Error){
+                    Toast.makeText(context, result.errorMessage.toString().trim(), Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(context, "Some Unexpected Error Occured", Toast.LENGTH_SHORT).show()
+                }
+            }
 
         }
     }

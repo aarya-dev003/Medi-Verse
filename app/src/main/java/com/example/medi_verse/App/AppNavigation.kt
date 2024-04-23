@@ -25,17 +25,17 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
             DecisionPage(AppnavController=navController)
         }
         composable(route= AppScreens.StLogin.route){
-            StLogin(AppnavController = navController, remoteRepo)
+            StLogin(context ,AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.HomeMainScreen.route){
             HomeMainScreen(context = context)
         }
         composable(route= AppScreens.StSignUp.route){
-            StSignup(AppnavController = navController, remoteRepo)
+            StSignup(context, AppnavController = navController, remoteRepo)
         }
 
         composable(route= AppScreens.ClubAdLogin.route){
-            ClubAdLogin(AppnavController = navController, remoteRepo)
+            ClubAdLogin(context,AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.ClubAdminMainScreen.route){
             ClubAdminMainScreen(context)
