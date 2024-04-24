@@ -13,5 +13,6 @@ object  ClubAdminMainScreen: AppScreens("ClubAdminMainScreen")
 object  CollegeAdminMainScreen: AppScreens("CollegeAdminMainScreen")
 object  CollegeAdLogin: AppScreens("CollegeAdLogin")
 object  CollegeAdSignup: AppScreens("CollegeAdSignup")
+object  SplashScreen: AppScreens("SplashScreen")
 
 }
