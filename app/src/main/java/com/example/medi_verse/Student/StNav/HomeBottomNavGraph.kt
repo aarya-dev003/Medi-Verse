@@ -9,13 +9,14 @@ import com.example.medi_verse.Student.StScreens.StAnnouncements
 
 import com.example.medi_verse.Student.StScreens.StFeedback
 import com.example.medi_verse.Student.StScreens.StHome
+import com.example.medi_verse.repository.RemoteRepo
 
 @Composable
-fun HomeBottomNavGraph(HomenavController: NavHostController, context: Context) {
+fun HomeBottomNavGraph(HomenavController: NavHostController, context: Context, remoteRepo: RemoteRepo) {
     NavHost(navController = HomenavController,
         startDestination = HomeBottomBarScreen.Home.route ){
         composable(route = HomeBottomBarScreen.Home.route){
-            StHome(context,HomenavController)
+            StHome(context,HomenavController, remoteRepo)
         }
         composable(route = HomeBottomBarScreen.Announcements.route){
             StAnnouncements(HomenavController)

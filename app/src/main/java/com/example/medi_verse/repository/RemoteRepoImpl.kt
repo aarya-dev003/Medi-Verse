@@ -3,6 +3,7 @@ package com.example.medi_verse.repository
 import android.util.Log
 import com.example.medi_verse.data.remote.ApiService
 import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
@@ -179,22 +180,23 @@ class RemoteRepoImpl (
         }
     }
 
-   override suspend fun retrievePostUser(): Result<String>{
+    override suspend fun retrievePostUser(): Result<List<GetPost>> {
         try {
             val token = sessionManager.getJwtToken()
-                ?: return Result.Error("No token Exits", "")
+                ?: return Result.Error("No token Exists", emptyList())
 
             val result = apiService.retrievePostUser("Bearer $token")
 
-            if (result != null){
-                return Result.Success("$result", "Post recieved Successfully")
-            }else{
-                return Result.Error("An error Occurred while retrieving", "$result")
+            if (result.isNotEmpty()) {
+                return Result.Success(result, "Posts received Successfully")
+            } else {
+                return Result.Error("An error Occurred while retrieving", emptyList())
             }
-        }catch (e: Exception){
-            return Result.Error("Cannot Retrieve", "")
+        } catch (e: Exception) {
+            return Result.Error("Cannot Retrieve", emptyList())
         }
     }
+
 
 
     //tasks for college admin

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -56,6 +58,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,13 +68,72 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import coil.request.ImageRequest
+import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
 import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
+import com.example.medi_verse.data.remote.model.GetPost
+import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun StHome(context: Context,navController: NavController) {
+fun StHome(context: Context,navController: NavController, remoteRepo: RemoteRepo) {
+    // Define postResult to hold a Result<List<GetPost>>?
+    val postResult = remember { mutableStateOf<Result<List<GetPost>>?>(null) }
+
+    // Effect to trigger the API call when this composable is first shown
+    LaunchedEffect(Unit) {
+        try {
+            // Call the function to retrieve posts
+            val result = remoteRepo.retrievePostUser()
+
+            // Update the state with the result of the API call
+            postResult.value = result
+        } catch (e: Exception) {
+            // Update the state with the error if an exception occurs
+            postResult.value = Result.Error(e.message ?: "An unexpected error occurred", emptyList())
+        }
+    }
+
+    // UI code to display the result
+    postResult.value?.let { result ->
+        when (result) {
+            is Result.Success -> {
+                // Handle success case
+                val posts = result.data // Retrieve the list of posts
+                if (posts!!.isNotEmpty()) {
+                    // If there are posts, display them
+                    // You can navigate to the desired screen using navController if needed
+                    // Example: navController.navigate(route = AppScreens.SomeScreen.route)
+                    posts.forEach { post ->
+                        HomeLayout(
+                            clubname = post.username,
+                            imageUrl = post.image,
+                            title = post.description,
+                            subtitle = "Time: ${post.time}"
+                        )
+                    }
+                } else {
+                    // If no posts are available, display a message
+                    Toast.makeText(context, "No posts available", Toast.LENGTH_SHORT).show()
+                }
+            }
+            is Result.Error -> {
+                // Handle error case
+                // Show an error message to the user
+                Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                // Handle unexpected case
+                // Log the error for debugging purposes
+                Log.e("StHome", "Unexpected result type: $result")
+                Toast.makeText(context, "Some unexpected error occurred", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
     val scope= rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
     val items =
