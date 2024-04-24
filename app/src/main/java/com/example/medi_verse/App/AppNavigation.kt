@@ -17,9 +17,9 @@ import com.example.medi_verse.repository.RemoteRepo
 @Composable
 fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
     val navController= rememberNavController()
-    NavHost(navController =navController , startDestination = AppScreens.SplashScreen2.route ){
+    NavHost(navController =navController , startDestination = AppScreens.SplashScreen.route ){
         composable(route= AppScreens.SplashScreen.route){
-            SplashScreen()
+            SplashScreen(navController)
         }
         composable(route= AppScreens.FirstPage.route){
             FirstPage(AppnavController=navController)
