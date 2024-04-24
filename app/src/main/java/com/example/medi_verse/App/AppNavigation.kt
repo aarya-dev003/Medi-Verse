@@ -37,7 +37,6 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo, sessionManager: Sess
         composable(route= AppScreens.StSignUp.route){
             StSignup(context, AppnavController = navController, remoteRepo)
         }
-
         composable(route= AppScreens.ClubAdLogin.route){
             ClubAdLogin(context,AppnavController = navController, remoteRepo)
         }
