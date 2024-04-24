@@ -14,5 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Medi-Verse"
 include(":app")
+include(":application")
 
  

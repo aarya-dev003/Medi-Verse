@@ -25,14 +25,16 @@ class RemoteRepoImpl (
             } else {
                 val result = apiService.createUserAccount(user)
                 sessionManager.createLoginContext("user")
-                result.let {
+                if (result.token != null) {
                     sessionManager.updateSession(
-                        token = it.token ?: "",
+                        token = result.token.toString(),
                         name = user.name,
                         email = user.email
                     )
-                    Success("User Created Successfully!")
-                } ?: Error("Some Error Occurred", "")
+                    Result.Success(result.token)
+                }  else {
+                    Result.Error("Some Error Occurred!", "")
+                }
 
             }
         } catch (e : Exception) {

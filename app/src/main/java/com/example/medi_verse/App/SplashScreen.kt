@@ -16,20 +16,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.medi_verse.R
+import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.SessionManager
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen (navController: NavController){
+fun SplashScreen (navController: NavController, remoteRepo: RemoteRepo, sessionManager: SessionManager){
     LaunchedEffect(key1 = true) {
-        delay(2000)
-        val result:String=""
-        if (result=="ClubAdmin"){
+        delay(1000)
+        val result = sessionManager.getLoginContext().toString()
+        val token = sessionManager.getJwtToken()
+
+        if (result=="club" && token != null){
             navController.navigate("ClubAdminMainScreen")
         }
-        if (result=="CollegeAdmin"){
+        else if (result=="admin" && token != null){
             navController.navigate("CollegeAdminMainScreen")
         }
-        if (result=="Student"){
+        else if (result=="user" && token != null){
             navController.navigate("HomeMainScreen")
         }
         else{
@@ -43,7 +47,7 @@ fun SplashScreen (navController: NavController){
         contentAlignment = Alignment.Center,
     ) {
         Image(
-            painter = painterResource(id = R.drawable.getstartedbackground),
+            painter = painterResource(id = R.drawable.finaliconlogo),
             contentDescription = "Logo",
             modifier = Modifier
                 .padding(16.dp)

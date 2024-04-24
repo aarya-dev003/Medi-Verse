@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 
         val remoteRepo = RemoteRepoImpl(apiService, sessionManager)
         setContent {
-            AppNavigation(context = this,remoteRepo)
+            AppNavigation(context = this,remoteRepo, sessionManager)
         }
     }
 }

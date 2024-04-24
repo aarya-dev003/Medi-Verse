@@ -13,13 +13,14 @@ import com.example.medi_verse.Student.HomeMainScreen
 import com.example.medi_verse.Student.StudentLoginSignup.StLogin
 import com.example.medi_verse.Student.StudentLoginSignup.StSignup
 import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.SessionManager
 
 @Composable
-fun AppNavigation(context: Context, remoteRepo: RemoteRepo) {
+fun AppNavigation(context: Context, remoteRepo: RemoteRepo, sessionManager: SessionManager) {
     val navController= rememberNavController()
     NavHost(navController =navController , startDestination = AppScreens.SplashScreen.route ){
         composable(route= AppScreens.SplashScreen.route){
-            SplashScreen(navController)
+            SplashScreen(navController, remoteRepo, sessionManager)
         }
         composable(route= AppScreens.FirstPage.route){
             FirstPage(AppnavController=navController)
