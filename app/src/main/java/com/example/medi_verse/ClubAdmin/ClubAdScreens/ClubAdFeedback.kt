@@ -1,6 +1,9 @@
 package com.example.medi_verse.ClubAdmin.ClubAdScreens
 
 //noinspection UsingMaterialAndMaterial3Libraries
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +22,9 @@ import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +36,62 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
+import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.FeedbackItem
+import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
+import com.example.medi_verse.utils.Result
 
 @Composable
-fun ClubAdFeedback(navController: NavController) {
+fun ClubAdFeedback(navController: NavController, context : Context, remoteRepo: RemoteRepo) {
+
+    val feedbackResult = remember { mutableStateOf<Result<List<FeedbackItem>>?>(null) }
+
+    // Effect to trigger the API call when this composable is first shown
+    LaunchedEffect(Unit) {
+        try {
+            // Call the function to retrieve posts
+            val result = remoteRepo.getFeedbackClub()
+
+            // Update the state with the result of the API call
+            feedbackResult.value = result
+        } catch (e: Exception) {
+            // Update the state with the error if an exception occurs
+            feedbackResult.value = Result.Error(e.message ?: "An unexpected error occurred", emptyList())
+        }
+    }
+
+    // UI code to display the result
+    feedbackResult.value?.let { result ->
+        when (result) {
+            is Result.Success -> {
+                // Handle success case
+                val feedback = result.data // Retrieve the list of posts
+                if (feedback!!.isNotEmpty()) {
+                    // If there are posts, display them
+                    // You can navigate to the desired screen using navController if needed
+                    // Example: navController.navigate(route = AppScreens.SomeScreen.route)
+                    feedback.forEach {
+
+                    }
+                } else {
+                    // If no posts are available, display a message
+                    Toast.makeText(context, "No feedback available", Toast.LENGTH_SHORT).show()
+                }
+            }
+            is Result.Error -> {
+                // Handle error case
+                // Show an error message to the user
+                Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                // Handle unexpected case
+                // Log the error for debugging purposes
+                Log.e("StHome", "Unexpected result type: $result")
+                Toast.makeText(context, "Some unexpected error occurred", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     Box(modifier = Modifier
         .background(BackgroundColor)
         .fillMaxSize(), contentAlignment = Alignment.Center) {

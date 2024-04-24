@@ -23,7 +23,7 @@ fun HomeBottomNavGraph(HomenavController: NavHostController, context: Context, r
 
         }
         composable(route = HomeBottomBarScreen.Feedback.route){
-            StFeedback(HomenavController)
+            StFeedback(HomenavController, context, remoteRepo)
         }
         composable(route = HomeBottomBarScreen.StLogin.route){
 

@@ -1,6 +1,8 @@
 package com.example.medi_verse.repository
 
 import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.FeedbackItem
+import com.example.medi_verse.data.remote.model.FeedbackRequest
 import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
@@ -36,5 +38,10 @@ interface RemoteRepo {
     suspend fun createAnnouncement(announcement: Announcement) : Result<String>
 
     suspend fun getAnnouncementUser(): Result<List<Announcement>>
+
+    suspend fun createFeedback(feedback : FeedbackRequest): Result<String>
+
+    suspend fun getFeedbackClub(): Result<List<FeedbackItem>>
+    suspend fun getFeedbackAdmin(): Result<List<FeedbackItem>>
 
 }

@@ -1,5 +1,7 @@
 package com.example.medi_verse.Student.StScreens
 
+import android.content.Context
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.spring
@@ -42,16 +44,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
+import com.example.medi_verse.data.remote.model.FeedbackRequest
+import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun StFeedback(navController: NavController) {
+fun StFeedback(navController: NavController, context: Context, remoteRepo: RemoteRepo) {
+    val createPostResult = remember { mutableStateOf<Result<String>?>(null) }
     val pagerState = rememberPagerState()
     val pages = listOf("Campus","Clubs","Others")
     val defaultIndicator = @Composable { tabPositions: List<TabPosition> ->
@@ -98,15 +108,19 @@ fun StFeedback(navController: NavController) {
                 state = pagerState,
             ) { page ->
                 Box(Modifier.fillMaxSize(),contentAlignment = Alignment.TopCenter) {
+                    var issueT : String = "admin"
                     var textContent=""
                     if (page==0){
                         textContent="Campus related suggestion"
+                        issueT = "admin"
                     }
                     if (page==1){
                         textContent="Club related suggestion"
+                        issueT = "club"
                     }
                     if (page==2){
                         textContent="Other suggestion"
+                        issueT = "admin"
                     }
                     Column {
                         val uservalue= remember { mutableStateOf("") }
@@ -131,7 +145,23 @@ fun StFeedback(navController: NavController) {
                                 .padding(top = 140.dp)
                         )
                         Button(
-                            onClick = {},
+                            onClick = {
+                                if(page == 0)
+                                    issueT = "admin"
+                                else if(page == 1)
+                                    issueT = "club"
+                                else
+                                    issueT = "admin"
+                                val feedback = FeedbackRequest(
+                                    issueType = issueT,
+                                    issue = uservalue.value,
+                                    time = System.currentTimeMillis()
+                                )
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val feedbackReq = remoteRepo.createFeedback(feedback)
+                                    createPostResult.value = feedbackReq
+                                }
+                            },
                             modifier = Modifier
                                 .padding(top = 10.dp)
                                 .align(Alignment.CenterHorizontally),
@@ -141,6 +171,16 @@ fun StFeedback(navController: NavController) {
                             ),
                         ) {
                             Text(text = "Send")
+                        }
+                    }
+
+                    createPostResult.value?.let { result ->
+                        if (result is Result.Success) {
+                            Toast.makeText(context, "Feedback Sent", Toast.LENGTH_SHORT).show()
+                        } else if (result is Result.Error) {
+                            Toast.makeText(context, result.errorMessage.toString().trim(), Toast.LENGTH_SHORT).show()
+                        } else {
+//                            Toast.makeText(context, "Some Unexpected Error Occured", Toast.LENGTH_SHORT).show()
                         }
                     }
 

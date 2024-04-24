@@ -15,7 +15,7 @@ import com.example.medi_verse.repository.RemoteRepo
 fun CollegeAdBottomNavGraph (CollegenavController: NavHostController, context: Context, remoteRepo: RemoteRepo){
     NavHost(navController = CollegenavController, startDestination = CollegeAdBottomBarScreen.Home.route ){
         composable(route= CollegeAdBottomBarScreen.Home.route){
-            CollegeAdHome(CollegenavController)
+            CollegeAdHome(CollegenavController, context, remoteRepo)
         }
         composable(route= CollegeAdBottomBarScreen.Announcements.route){
             CollegeAdAnnoucements(context = context,CollegenavController, remoteRepo )

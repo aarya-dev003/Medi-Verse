@@ -2,6 +2,8 @@ package com.example.medi_verse.data.remote
 
 import com.example.medi_verse.data.remote.model.Announcement
 import com.example.medi_verse.data.remote.model.AuthResponse
+import com.example.medi_verse.data.remote.model.FeedbackItem
+import com.example.medi_verse.data.remote.model.FeedbackRequest
 import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
@@ -11,7 +13,10 @@ import com.example.utils.Constants.ADMIN_LOGIN
 import com.example.utils.Constants.CREATE_ANNOUNCEMENT
 import com.example.utils.Constants.CREATE_CLUB
 import com.example.utils.Constants.CREATE_END_POINT
+import com.example.utils.Constants.CREATE_FEEDBACK
 import com.example.utils.Constants.GET_ANNOUNCEMENT_USER
+import com.example.utils.Constants.GET_FEEDBACK_ADMIN
+import com.example.utils.Constants.GET_FEEDBACK_CLUB
 import com.example.utils.Constants.LOGIN_CLUB_ADMIN
 import com.example.utils.Constants.LOGIN_END_POINT
 import com.example.utils.Constants.REGISTER_END_POINT
@@ -104,5 +109,25 @@ interface ApiService {
     suspend fun getAnnouncementUser(
         @Header ("Authorization") token : String
     ): List<Announcement>
+
+    @Headers("Content-Type: application/json")
+    @POST(CREATE_FEEDBACK)
+    suspend fun createFeedback(
+        @Header ("Authorization") token: String,
+        @Body feedback : FeedbackRequest
+    ) : String
+
+
+    @Headers("Content-Type: application/json")
+    @GET(GET_FEEDBACK_CLUB)
+    suspend fun getFeedbackClub(
+        @Header ("Authorization") token : String
+    ): List<FeedbackItem>
+
+    @Headers("Content-Type: application/json")
+    @GET(GET_FEEDBACK_ADMIN)
+    suspend fun getFeedbackAdmin(
+        @Header ("Authorization") token : String
+    ): List<FeedbackItem>
 
 }

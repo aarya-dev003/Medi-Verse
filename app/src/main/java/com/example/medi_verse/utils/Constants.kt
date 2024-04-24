@@ -54,5 +54,11 @@ object Constants {
     //Datastore
     private const val USER_PREFERENCES_NAME = "session_manager"
 
+    //feedback
+    private const val FEEDBACK = "feedback"
+    const val CREATE_FEEDBACK = "$API_VERSION/$USER/$FEEDBACK/create"
+    const val GET_FEEDBACK_ADMIN = "$API_VERSION/$AUTH_TYPE/$FEEDBACK/get"
+    const val GET_FEEDBACK_CLUB = "$API_VERSION/$LOGIN_TYPE/$FEEDBACK/get"
+
 
 }

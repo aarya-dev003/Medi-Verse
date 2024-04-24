@@ -3,6 +3,8 @@ package com.example.medi_verse.repository
 import android.util.Log
 import com.example.medi_verse.data.remote.ApiService
 import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.FeedbackItem
+import com.example.medi_verse.data.remote.model.FeedbackRequest
 import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
@@ -258,6 +260,52 @@ class RemoteRepoImpl (
         }
     }
 
+    override suspend fun createFeedback(feedback : FeedbackRequest): Result<String> {
+        try{
+            val token = sessionManager.getJwtToken()
+            if(token == null){
+                Result.Error("JWT Token Not Exits", "")
+            }
 
+            val result = apiService.createFeedback(
+                "Bearer $token",
+                feedback
+            )
+            return Result.Success(result)
+        } catch (e: Exception) {
+            return Result.Error("An error occurred while creating feedback","")
+        }
+    }
 
+    override suspend fun getFeedbackClub(): Result<List<FeedbackItem>> {
+        try {
+            val token = sessionManager.getJwtToken() ?: return Result.Error("jwt token does not exist", emptyList())
+
+            val result = apiService.getFeedbackClub("Bearer $token")
+
+            return if (result.isNotEmpty()) {
+                Result.Success(result, "Feedback retrieved successfully")
+            } else {
+                Result.Error("No Feedbacks found", result)
+            }
+        } catch (e: Exception) {
+            return Result.Error("$e.message ?: An error occurred while receiving Feedbacks", emptyList())
+        }
+    }
+
+    override suspend fun getFeedbackAdmin(): Result<List<FeedbackItem>> {
+        try {
+            val token = sessionManager.getJwtToken() ?: return Result.Error("jwt token does not exist", emptyList())
+
+            val result = apiService.getFeedbackAdmin("Bearer $token")
+
+            return if (result.isNotEmpty()) {
+                Result.Success(result, "Feedback retrieved successfully")
+            } else {
+                Result.Error("No Feedbacks found", result)
+            }
+        } catch (e: Exception) {
+            return Result.Error("$e.message ?: An error occurred while receiving Feedbacks", emptyList())
+        }
+    }
 }
