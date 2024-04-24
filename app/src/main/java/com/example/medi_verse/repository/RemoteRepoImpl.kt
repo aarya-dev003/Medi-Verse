@@ -33,6 +33,7 @@ class RemoteRepoImpl (
                     )
                     Success("User Created Successfully!")
                 } ?: Error("Some Error Occurred", "")
+
             }
         } catch (e : Exception) {
             Error(e.message ?: "Some Problem Occurred!", "")
@@ -238,6 +239,23 @@ class RemoteRepoImpl (
             Result.Error(e.message ?: "Some Problem Occurred!", "")
         }
     }
+
+    override suspend fun getAnnouncementUser(): Result<List<Announcement>> {
+        try {
+            val token = sessionManager.getJwtToken() ?: return Result.Error("jwt token does not exist", emptyList())
+
+            val result = apiService.getAnnouncementUser("Bearer $token")
+
+            return if (result.isNotEmpty()) {
+                Result.Success(result, "Announcements retrieved successfully")
+            } else {
+                Result.Error("No announcements found", result)
+            }
+        } catch (e: Exception) {
+            return Result.Error("$e.message ?: An error occurred while receiving announcements", emptyList())
+        }
+    }
+
 
 
 }

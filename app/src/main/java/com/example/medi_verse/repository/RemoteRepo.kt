@@ -35,4 +35,6 @@ interface RemoteRepo {
 
     suspend fun createAnnouncement(announcement: Announcement) : Result<String>
 
+    suspend fun getAnnouncementUser(): Result<List<Announcement>>
+
 }
