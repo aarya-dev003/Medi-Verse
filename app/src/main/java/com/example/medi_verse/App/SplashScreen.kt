@@ -43,7 +43,7 @@ fun SplashScreen (navController: NavController){
         contentAlignment = Alignment.Center,
     ) {
         Image(
-            painter = painterResource(id = R.drawable.getstartedbackground),
+            painter = painterResource(id = R.drawable.finaliconlogo),
             contentDescription = "Logo",
             modifier = Modifier
                 .padding(16.dp)
