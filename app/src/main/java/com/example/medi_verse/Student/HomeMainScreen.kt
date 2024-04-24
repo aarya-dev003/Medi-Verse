@@ -20,15 +20,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
 import com.example.medi_verse.Student.StNav.HomeBottomNavGraph
+import com.example.medi_verse.repository.RemoteRepo
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeMainScreen( context: Context) {
+fun HomeMainScreen( context: Context, remoteRepo: RemoteRepo) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        HomeBottomNavGraph(navController, context = context)
+        HomeBottomNavGraph(navController, context = context, remoteRepo)
     }
 }
 @Composable

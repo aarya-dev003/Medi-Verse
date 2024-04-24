@@ -2,6 +2,9 @@
 package com.example.medi_verse.Student.StScreens
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +24,9 @@ import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,10 +41,61 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.R
 import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
+import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.GetPost
+import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun StAnnouncements(navController: NavController) {
+fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo,context: Context) {
+    val announcementResult = remember { mutableStateOf<Result<List<Announcement>>?>(null) }
+
+    // Effect to trigger the API call when this composable is first shown
+    LaunchedEffect(Unit) {
+        try {
+            // Call the function to retrieve posts
+            val result = remoteRepo.getAnnouncementUser()
+
+            // Update the state with the result of the API call
+            announcementResult.value = result
+        } catch (e: Exception) {
+            // Update the state with the error if an exception occurs
+            announcementResult.value = Result.Error(e.message ?: "An unexpected error occurred", emptyList())
+        }
+    }
+
+    // UI code to display the result
+    announcementResult.value?.let { result ->
+        when (result) {
+            is Result.Success -> {
+                // Handle success case
+                val announcement = result.data // Retrieve the list of posts
+                if (announcement!!.isNotEmpty()) {
+                    // If there are posts, display them
+                    // You can navigate to the desired screen using navController if needed
+                    // Example: navController.navigate(route = AppScreens.SomeScreen.route)
+                    announcement.forEach {
+
+                    }
+                } else {
+                    // If no posts are available, display a message
+                    Toast.makeText(context, "No Announcement available", Toast.LENGTH_SHORT).show()
+                }
+            }
+            is Result.Error -> {
+                // Handle error case
+                // Show an error message to the user
+                Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                // Handle unexpected case
+                // Log the error for debugging purposes
+                Log.e("StHome", "Unexpected result type: $result")
+                Toast.makeText(context, "Some unexpected error occurred", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color(0xFFD7E3FC)))
@@ -115,17 +172,6 @@ fun AnnoucementsDataList(): MutableList<AnnoucementsCustomDatatype> {
     list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Students who have below 75% attendance will be detained"))
     list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Maintain the decorum of the college do not any illegal activity in campus"))
     list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Tomorrow will be holiday on account of republic day"))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Third-year college hours are from 10 to 5."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Exams for the current semester will commence from next Monday. Make sure you are well-prepared."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Library hours have been extended for the exam period. Take advantage of this opportunity to study in a quiet environment."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"The annual cultural fest 'Verve' is scheduled for next month. Start preparing your performances and exhibits."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"The college canteen will remain closed for renovation work starting next week. Alternative arrangements have been made for food services."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"An industry expert seminar on 'Future Trends in Technology' will be held this Friday. Don't miss this opportunity to gain insights into the latest developments."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"The college sports day is scheduled for next Saturday. Get ready to showcase your athletic talents and team spirit."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"A blood donation camp will be organized on campus next week. Your participation can save lives."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"The college is hosting a career fair next month. Network with industry professionals and explore job opportunities."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"An alumni meet is planned for next weekend. Reconnect with your former classmates and mentors."))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"The college is organizing a tree plantation drive to promote environmental sustainability. Join us in making a positive impact."))
 
     return list
 }

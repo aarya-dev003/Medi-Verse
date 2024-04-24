@@ -3,6 +3,7 @@ package com.example.medi_verse.repository
 import android.util.Log
 import com.example.medi_verse.data.remote.ApiService
 import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
@@ -32,6 +33,7 @@ class RemoteRepoImpl (
                     )
                     Success("User Created Successfully!")
                 } ?: Error("Some Error Occurred", "")
+
             }
         } catch (e : Exception) {
             Error(e.message ?: "Some Problem Occurred!", "")
@@ -179,22 +181,23 @@ class RemoteRepoImpl (
         }
     }
 
-   override suspend fun retrievePostUser(): Result<String>{
+    override suspend fun retrievePostUser(): Result<List<GetPost>> {
         try {
             val token = sessionManager.getJwtToken()
-                ?: return Result.Error("No token Exits", "")
+                ?: return Result.Error("No token Exists", emptyList())
 
             val result = apiService.retrievePostUser("Bearer $token")
 
-            if (result != null){
-                return Result.Success("$result", "Post recieved Successfully")
-            }else{
-                return Result.Error("An error Occurred while retrieving", "$result")
+            if (result.isNotEmpty()) {
+                return Result.Success(result, "Posts received Successfully")
+            } else {
+                return Result.Error("An error Occurred while retrieving", emptyList())
             }
-        }catch (e: Exception){
-            return Result.Error("Cannot Retrieve", "")
+        } catch (e: Exception) {
+            return Result.Error("Cannot Retrieve", emptyList())
         }
     }
+
 
 
     //tasks for college admin
@@ -236,6 +239,23 @@ class RemoteRepoImpl (
             Result.Error(e.message ?: "Some Problem Occurred!", "")
         }
     }
+
+    override suspend fun getAnnouncementUser(): Result<List<Announcement>> {
+        try {
+            val token = sessionManager.getJwtToken() ?: return Result.Error("jwt token does not exist", emptyList())
+
+            val result = apiService.getAnnouncementUser("Bearer $token")
+
+            return if (result.isNotEmpty()) {
+                Result.Success(result, "Announcements retrieved successfully")
+            } else {
+                Result.Error("No announcements found", result)
+            }
+        } catch (e: Exception) {
+            return Result.Error("$e.message ?: An error occurred while receiving announcements", emptyList())
+        }
+    }
+
 
 
 }

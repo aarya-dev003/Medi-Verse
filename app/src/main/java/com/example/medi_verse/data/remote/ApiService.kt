@@ -11,6 +11,7 @@ import com.example.utils.Constants.ADMIN_LOGIN
 import com.example.utils.Constants.CREATE_ANNOUNCEMENT
 import com.example.utils.Constants.CREATE_CLUB
 import com.example.utils.Constants.CREATE_END_POINT
+import com.example.utils.Constants.GET_ANNOUNCEMENT_USER
 import com.example.utils.Constants.LOGIN_CLUB_ADMIN
 import com.example.utils.Constants.LOGIN_END_POINT
 import com.example.utils.Constants.REGISTER_END_POINT
@@ -98,5 +99,10 @@ interface ApiService {
     ): AuthResponse
 
 
+    @Headers("Content-Type: application/json")
+    @GET(GET_ANNOUNCEMENT_USER)
+    suspend fun getAnnouncementUser(
+        @Header ("Authorization") token : String
+    ): List<Announcement>
 
 }
