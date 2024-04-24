@@ -12,9 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
 rootProject.name = "Medi-Verse"
 include(":app")
-include(":Application")
 
  
