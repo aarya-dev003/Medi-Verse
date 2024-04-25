@@ -46,15 +46,14 @@ import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.utils.Result
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo,context: Context) {
+fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo, context: Context) {
     val announcementResult = remember { mutableStateOf<Result<List<Announcement>>?>(null) }
 
     // Effect to trigger the API call when this composable is first shown
     LaunchedEffect(Unit) {
         try {
-            // Call the function to retrieve posts
+            // Call the function to retrieve announcements
             val result = remoteRepo.getAnnouncementUser()
 
             // Update the state with the result of the API call
@@ -70,16 +69,19 @@ fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo,context
         when (result) {
             is Result.Success -> {
                 // Handle success case
-                val announcement = result.data // Retrieve the list of posts
-                if (announcement!!.isNotEmpty()) {
-                    // If there are posts, display them
-                    // You can navigate to the desired screen using navController if needed
-                    // Example: navController.navigate(route = AppScreens.SomeScreen.route)
-                    announcement.forEach {
-
+                val announcements = result.data // Retrieve the list of announcements
+                if (!announcements.isNullOrEmpty()) { // Ensure announcements list is not null or empty
+                    // If there are announcements, display them in LazyColumn
+                    LazyColumn(Modifier.fillMaxSize().padding(bottom = 56.dp)) {
+                        items(announcements) { announcement ->
+                            AnnouncementLayout( // Corrected reference to AnnouncementLayout
+                                img = R.drawable.annoucementshumanpic,
+                                announcement = announcement.description // Use announcement description
+                            )
+                        }
                     }
                 } else {
-                    // If no posts are available, display a message
+                    // If no announcements are available, display a message
                     Toast.makeText(context, "No Announcement available", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -96,35 +98,8 @@ fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo,context
             }
         }
     }
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xFFD7E3FC)))
-    Column(modifier = Modifier.fillMaxSize()
-    ) {
-        Text(
-            text = "Announcements",
-            color = Color(0xFF134074),
-            fontSize = 30.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 15.dp)
-        )
-        LazyColumn(Modifier
-            .fillMaxSize()
-            .padding(bottom = 56.dp)) {
-            items(AnnoucementsDataList()) { item ->
-                AnnoucementLayout(item.img, item.annoucement)
-            }
-        }
-    }
-//    navController.navigate(route = HomeBottomBarScreen.Home.route) {
-//        popUpTo(route = HomeBottomBarScreen.Home.route) {
-//            inclusive = true
-//        }
-//    }
+
+    // Handle back navigation
     BackHandler {
         navController.navigate(route = HomeBottomBarScreen.Home.route) {
             popUpTo(route = HomeBottomBarScreen.Home.route) {
@@ -133,8 +108,9 @@ fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo,context
         }
     }
 }
+
 @Composable
-fun AnnoucementLayout(img: Int, annoucement: String) {
+fun AnnouncementLayout(img: Int, announcement: String) {
     Card(
         elevation = 8.dp,
         modifier = Modifier.padding(8.dp)
@@ -155,23 +131,12 @@ fun AnnoucementLayout(img: Int, annoucement: String) {
             )
             Column(modifier = Modifier.weight(.5f)) {
                 Text(
-                    text = annoucement, fontWeight = FontWeight.W300, color = Color.Black,
+                    text = announcement, // Corrected to use the announcement text
+                    fontWeight = FontWeight.W300,
+                    color = Color.Black,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
         }
     }
-
-}
-data class AnnoucementsCustomDatatype(val img:Int,val annoucement:String)
-fun AnnoucementsDataList(): MutableList<AnnoucementsCustomDatatype> {
-    val list = mutableListOf<AnnoucementsCustomDatatype>()
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Placement drive is going on"))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"75% attendance is mandatory "))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"MoonStone is postponed"))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Students who have below 75% attendance will be detained"))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Maintain the decorum of the college do not any illegal activity in campus"))
-    list.add(AnnoucementsCustomDatatype(R.drawable.annoucementshumanpic,"Tomorrow will be holiday on account of republic day"))
-
-    return list
 }
