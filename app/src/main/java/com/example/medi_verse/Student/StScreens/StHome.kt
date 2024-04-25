@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.filled.Email
@@ -75,72 +76,25 @@ import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.utils.Result
 
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun StHome(context: Context,navController: NavController, remoteRepo: RemoteRepo) {
-    // Define postResult to hold a Result<List<GetPost>>?
+fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRepo) {
     val postResult = remember { mutableStateOf<Result<List<GetPost>>?>(null) }
 
-    // Effect to trigger the API call when this composable is first shown
     LaunchedEffect(Unit) {
         try {
-            // Call the function to retrieve posts
             val result = remoteRepo.retrievePostUser()
-
-            // Update the state with the result of the API call
             postResult.value = result
         } catch (e: Exception) {
-            // Update the state with the error if an exception occurs
             postResult.value = Result.Error(e.message ?: "An unexpected error occurred", emptyList())
         }
     }
 
-    // UI code to display the result
-    postResult.value?.let { result ->
-        when (result) {
-            is Result.Success -> {
-                // Handle success case
-                val posts = result.data // Retrieve the list of posts
-                if (posts!!.isNotEmpty()) {
-                    // If there are posts, display them
-                    // You can navigate to the desired screen using navController if needed
-                    // Example: navController.navigate(route = AppScreens.SomeScreen.route)
-                    posts.forEach { post ->
-                        HomeLayout(
-                            clubname = post.username,
-                            imageUrl = post.image,
-                            title = post.description,
-                            subtitle = "Time: ${post.time}"
-                        )
-                    }
-                } else {
-                    // If no posts are available, display a message
-                    Toast.makeText(context, "No posts available", Toast.LENGTH_SHORT).show()
-                }
-            }
-            is Result.Error -> {
-                // Handle error case
-                // Show an error message to the user
-                Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                // Handle unexpected case
-                // Log the error for debugging purposes
-                Log.e("StHome", "Unexpected result type: $result")
-                Toast.makeText(context, "Some unexpected error occurred", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-
-    val scope= rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
     val items =
         listOf(
             DrawerItem(Icons.Default.Share, "Share"),
             DrawerItem(Icons.Default.Email, "Mail us"),
-            //DrawerItem(Icons.Default.ExitToApp, "Logout")
         )
 
     var selectedItem by remember { mutableStateOf<DrawerItem?>(null) }
@@ -153,93 +107,56 @@ fun StHome(context: Context,navController: NavController, remoteRepo: RemoteRepo
                     .width(280.dp)
                     .fillMaxHeight()
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background((Color.White)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(modifier = Modifier
-                        .background(Color.White)
-                        .padding(top = 20.dp, bottom = 30.dp), contentAlignment = Alignment.BottomCenter) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.boy),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .padding(bottom = 10.dp)
-                                    .size(150.dp)
-                            )
-                            var name = "Noah Walker"
-                            val email="NoahWalker02@gmail.com"
-                            Text(
-                                text = name,
-                                color = Color(0xFF13315C),
-                                fontSize = 20.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.padding(start = 10.dp)
-                            )
-                            Text(
-                                text = email,
-                                color = Color(0xFF13315C),
-                                fontSize = 20.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.padding(start = 10.dp)
-                            )
-                        }
-                    }
-                }
-                items.forEach { item ->
-                    NavigationDrawerItem(
-                        label = { Text(text = item.label) },
-                        selected = item == selectedItem,
-                        onClick =
-                        {
-                            if (item.label=="Mail us"){
-                                openGmailApp(context)
-                                selectedItem=null
-                            }
-                            if (item.label=="Share"){
-                                openWhatsApp(context)
-                                selectedItem=null
-                            }
-                            else{
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                                selectedItem=null
-                            }
-                        },
-                        icon = { androidx.compose.material3.Icon(imageVector = item.icon, contentDescription = item.label) },
-                    )
-                }
+                // Drawer content
             }
         },
         content = {
-            ScafoldContent(
-                onMenuIconClick = {scope.launch { drawerState.open() }}
-            )
+            postResult.value?.let { result ->
+                when (result) {
+                    is Result.Success -> {
+                        val posts = result.data
+                        if (posts != null) {
+                            if (posts.isNotEmpty()) {
+                                Column {
+
+                                        DisplayPost(posts, onMenuIconClick = { scope.launch { drawerState.open() } })
+
+                                }
+                            } else {
+                                Toast.makeText(context, "No posts available", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    is Result.Error -> {
+                        Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        Log.e("StHome", "Unexpected result type: $result")
+                        Toast.makeText(context, "Some unexpected error occurred", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     )
+    BackHandler {
+        System.exit(0)
+    }
+}
 //    navController.navigate(route = HomeBottomBarScreen.Home.route) {
 //        popUpTo(route = HomeBottomBarScreen.Home.route) {
 //            inclusive = true
 //        }
 //    }
-    BackHandler {
-        System.exit(0)
-    }
-}
+
+
+
+
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn( ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ScafoldContent(
+    post: List<GetPost>,
     onMenuIconClick:()->Unit
 ) {
     val horizontalPagerState = rememberPagerState(pageCount = { HomeDataList().size })
@@ -311,15 +228,19 @@ fun ScafoldContent(
                 ) { pageIndex ->
                     val currentItem = HomeDataList()[pageIndex]
                     HomeLayout(
-                        clubname = currentItem.clubname,
-                        imageUrl = currentItem.img,
-                        title = currentItem.title,
-                        subtitle = currentItem.subtitle
+                        posts = post
                     )
                 }
             }
         }
     }}
+@Composable
+fun DisplayPost(post: List<GetPost>, onMenuIconClick: () -> Unit) {
+    ScafoldContent(
+        post = post,
+        onMenuIconClick = onMenuIconClick
+    )
+}
 data class HomeCustomDatatype(val clubname: String,val img:String,val title:String,val subtitle:String)
 fun HomeDataList(): MutableList<HomeCustomDatatype> {
     val list = mutableListOf<HomeCustomDatatype>()
@@ -331,51 +252,57 @@ fun HomeDataList(): MutableList<HomeCustomDatatype> {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeLayout(
-    clubname:String,
-    imageUrl: String,
-    title: String,
-    subtitle: String
+    posts: List<GetPost>
 ) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
     ) {
-       Text(text = clubname,fontSize = 20.sp, modifier = Modifier.padding(start = 25.dp, top = 30.dp), fontWeight = FontWeight.SemiBold)
+        posts.forEach { post ->
+            PostItem(post = post)
+        }
+    }
+}
+
+@Composable
+fun PostItem(post: GetPost) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = post.username,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
         AsyncImage(
             modifier = Modifier
-                .fillMaxHeight()
-                .padding(start = 16.dp, bottom = 3.dp, top = 0.dp, end = 16.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(16.dp)),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl).build(),
+                .data(post.image).build(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
-
         Text(
-            text = title,
+            text = post.time.toString(),
             color = Color(0xFF134074),
-            fontSize = 30.sp,
+            fontSize = 16.sp,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .fillMaxWidth()
+            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
         )
-
         Text(
-            text = subtitle,
+            text = post.description,
             color = Color(0xFF13315C),
-            fontSize = 20.sp,
+            fontSize = 16.sp,
             fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.Thin,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(top = 10.dp, bottom = 150.dp, start = 5.dp, end = 5.dp)
-                .fillMaxWidth()
+            fontWeight = FontWeight.Normal,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
     }
 }

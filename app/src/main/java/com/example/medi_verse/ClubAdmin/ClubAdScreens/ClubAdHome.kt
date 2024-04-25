@@ -139,9 +139,9 @@ fun ClubAdHome(context: Context,navController: NavController) {
             }
         },
         content = {
-            ScafoldContent(
-                onMenuIconClick = {scope.launch { drawerState.open() }}
-            )
+//            ScafoldContent(
+//                onMenuIconClick = {scope.launch { drawerState.open() }}
+//            )
         }
     )
     BackHandler {
