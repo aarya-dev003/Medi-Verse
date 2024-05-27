@@ -69,6 +69,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import coil.request.ImageRequest
+import com.example.Formator.formatTimestamp
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.R
 import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
@@ -280,7 +281,7 @@ fun PostItem(post: GetPost) {
             contentScale = ContentScale.Crop
         )
         Text(
-            text = post.time.toString(),
+            text = formatTimestamp(timestamp = post.time),
             color = Color(0xFF134074),
             fontSize = 16.sp,
             fontFamily = FontFamily.Serif,

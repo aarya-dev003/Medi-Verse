@@ -30,7 +30,7 @@ import retrofit2.http.POST
 
 interface ApiService {
     companion object{
-        const val BASE_URL = "https://aaryaworks.tech/"
+        const val BASE_URL = "https://social-media-server-mva3.onrender.com"
     }
 
     //for users (student)

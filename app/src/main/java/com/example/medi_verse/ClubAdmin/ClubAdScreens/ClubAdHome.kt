@@ -55,7 +55,7 @@ fun ClubAdHome(context: Context,navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val items =
         listOf(
-            DrawerItem(Icons.Default.Share, "Share"),
+            DrawerItem(Icons.Default.Shard e, "Share"),
             DrawerItem(Icons.Default.Email, "Mail us"),
             //DrawerItem(Icons.Default.ExitToApp, "Logout")
         )
