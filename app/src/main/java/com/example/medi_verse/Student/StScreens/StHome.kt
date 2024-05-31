@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -33,6 +34,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,14 +45,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.Formator.formatTimestamp
+import com.example.medi_verse.R
+import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
+import com.example.medi_verse.data.remote.model.GetPost
+import com.example.medi_verse.repository.RemoteRepo
+import com.example.medi_verse.utils.Result
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.filled.Email
@@ -59,23 +70,12 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import coil.request.ImageRequest
-import com.example.Formator.formatTimestamp
-import com.example.medi_verse.App.AppScreens
-import com.example.medi_verse.R
-import com.example.medi_verse.Student.StNav.HomeBottomBarScreen
-import com.example.medi_verse.data.remote.model.GetPost
-import com.example.medi_verse.repository.RemoteRepo
-import com.example.medi_verse.utils.Result
 
 @Composable
 fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRepo) {
@@ -89,7 +89,6 @@ fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRep
             postResult.value = Result.Error(e.message ?: "An unexpected error occurred", emptyList())
         }
     }
-
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
     val items =
@@ -108,8 +107,8 @@ fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRep
                     .width(280.dp)
                     .fillMaxHeight()
             ) {
-                // Drawer content
-            }
+                DrawerItem(Icons.Default.Share, "Share")
+                DrawerItem(Icons.Default.Email, "Mail us")            }
         },
         content = {
             postResult.value?.let { result ->
@@ -119,9 +118,7 @@ fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRep
                         if (posts != null) {
                             if (posts.isNotEmpty()) {
                                 Column {
-
-                                        DisplayPost(posts, onMenuIconClick = { scope.launch { drawerState.open() } })
-
+                                    DisplayPost(posts, onMenuIconClick = { scope.launch { drawerState.open() } })
                                 }
                             } else {
                                 Toast.makeText(context, "No posts available", Toast.LENGTH_SHORT).show()
@@ -143,28 +140,22 @@ fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRep
         System.exit(0)
     }
 }
-//    navController.navigate(route = HomeBottomBarScreen.Home.route) {
-//        popUpTo(route = HomeBottomBarScreen.Home.route) {
-//            inclusive = true
-//        }
-//    }
-
-
-
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn( ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ScafoldContent(
     post: List<GetPost>,
-    onMenuIconClick:()->Unit
+    onMenuIconClick: () -> Unit
 ) {
-
-    Box(modifier = Modifier
-        .background(Color(0xFFEDF2FB))
-        .fillMaxSize()){
-        Column(Modifier.fillMaxSize()) {
+    val pagerState = rememberPagerState(pageCount = { post.size })
+    Box(
+        modifier = Modifier
+            .background(Color(0xFFEDF2FB))
+            .fillMaxSize()
+    ) {
+        Column(Modifier.fillMaxSize()
+        ) {
             Text(
                 text = "Medi-verse",
                 color = Color.Black,
@@ -184,14 +175,15 @@ fun ScafoldContent(
                             containerColor = Color(0xFFEDF2FB),
                         ),
                         title = {
-                            val uservalue= remember { mutableStateOf("") }
+                            val uservalue = remember { mutableStateOf("") }
                             TextField(
                                 value = uservalue.value,
                                 onValueChange = {
                                     uservalue.value = it
                                 },
                                 label = { Text(text = "Search") },
-                                colors = TextFieldDefaults.textFieldColors(cursorColor = Color.Black,
+                                colors = TextFieldDefaults.textFieldColors(
+                                    cursorColor = Color.Black,
                                     unfocusedLabelColor = Color.Black,
                                     focusedLabelColor = Color.Black,
                                     unfocusedTextColor = Color.Black,
@@ -201,38 +193,42 @@ fun ScafoldContent(
                                     containerColor = Color.White,
                                 ),
                                 textStyle = TextStyle(color = Color.Black),
-                                shape = RoundedCornerShape(12.dp),
-                            )
-
+                                shape = RoundedCornerShape(12.dp),)
                         },
                         navigationIcon = {
                             IconButton(onClick = onMenuIconClick) {
-                                Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon",tint = Color.Black)
+                                Icon(
+                                    imageVector = Icons.Default.Menu,
+                                    contentDescription = "Menu Icon",
+                                    tint = Color.Black
+                                )
                             }
                         },
                         actions = {
                             IconButton(onClick = { /*TODO*/ }) {
-                                Icon(imageVector = Icons.Default.Notifications, contentDescription = "Search Icon", tint = Color.Black)
+                                Icon(
+                                    imageVector = Icons.Default.Notifications,
+                                    contentDescription = "Search Icon",
+                                    tint = Color.Black
+                                )
                             }
                         }
                     )
                 }
-
-            )
-            {
-                val pagerState = rememberPagerState(pageCount = { post.size })
+            ) {
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 60.dp)
                         .background(Color(0xFFEDF2FB))
                 ) { pageIndex ->
                     PostItem(post = post[pageIndex])
                 }
             }
         }
-    }}
+    }
+}
+
 @Composable
 fun DisplayPost(post: List<GetPost>, onMenuIconClick: () -> Unit) {
     ScafoldContent(
@@ -261,66 +257,70 @@ fun HomeLayout(
 fun PostItem(post: GetPost) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = post.username,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        Spacer(modifier = Modifier.height(76.dp))
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(350.dp)
+                .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(16.dp)),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(post.image).build(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
-        Text(
-            text = formatTimestamp(timestamp = post.time),
-            color = Color(0xFF134074),
-            fontSize = 16.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
-        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            Text(
+                text = post.username,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 15.dp, top = 8.dp)
+            )
+            Spacer(modifier = Modifier.width(156.dp))
+            Text(
+                text = formatTimestamp(timestamp = post.time),
+                color = Color.Black,
+                fontSize = 16.sp,
+                fontFamily = FontFamily.Serif,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(start=15.dp,top = 8.dp, bottom = 4.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(28.dp))
         Text(
             text = post.description,
             color = Color(0xFF13315C),
             fontSize = 16.sp,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Normal,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(start=10.dp, bottom = 1.dp)
         )
     }
 }
-fun openGmailApp(context: Context){
+
+
+fun openGmailApp(context: Context) {
     try {
-        val intent=Intent(Intent.ACTION_SEND)
-        intent.type="vnd.android.cursor.item/email"
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "vnd.android.cursor.item/email"
         intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("anshgaur.work@gmail.com"))
         context.startActivity(intent)
-    }
-    catch (e: ActivityNotFoundException){
+    } catch (e: ActivityNotFoundException) {
 
     }
 }
+
 fun openWhatsApp(context: Context) {
-    val appMsg:String="Hey check out our app"+"https://play.google.com/store/apps/details?id=com.example.medi_verse"
-    val intent=Intent(Intent.ACTION_SEND)
-    intent.putExtra((Intent.EXTRA_TEXT),appMsg)
-    intent.type="text/plain"
+    val appMsg = "Hey check out our app" + "https://play.google.com/store/apps/details?id=com.example.medi_verse"
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.putExtra(Intent.EXTRA_TEXT, appMsg)
+    intent.type = "text/plain"
     context.startActivity(intent)
-
-
-
 }
+
 data class DrawerItem(val icon: ImageVector, val label: String)
-
-
-
-

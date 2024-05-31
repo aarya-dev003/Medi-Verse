@@ -15,7 +15,7 @@ import com.example.medi_verse.repository.RemoteRepo
 fun ClubAdminBottomNavGraph(ClubnavController:NavHostController,context: Context, remoteRepo: RemoteRepo) {
     NavHost(navController = ClubnavController, startDestination = ClubAdminBottomBarScreen.Home.route ){
         composable(route= ClubAdminBottomBarScreen.Home.route){
-            ClubAdHome(context = context,ClubnavController)
+            ClubAdHome(context = context,ClubnavController,remoteRepo)
         }
         composable(route= ClubAdminBottomBarScreen.AddPost.route){
             ClubAdAddPosts(context,ClubnavController, remoteRepo)

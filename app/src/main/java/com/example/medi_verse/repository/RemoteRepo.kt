@@ -31,7 +31,7 @@ interface RemoteRepo {
     //posts
     suspend fun createPost(post : Post) : Result<String>
 
-    suspend fun retrievePostClub() : Result<String>
+    suspend fun retrievePostClub() : Result<List<GetPost>>
 
     suspend fun retrievePostUser() : Result<List<GetPost>>
 

@@ -166,24 +166,22 @@ class RemoteRepoImpl (
         }
     }
 
-    override suspend fun retrievePostClub(): Result<String> {
-        try{
+    override suspend fun retrievePostClub(): Result<List<GetPost>> {
+        try {
             val token = sessionManager.getJwtToken()
-                ?: return Result.Error("jwt token does not exits", "")
+                ?: return Result.Error("No token Exists", emptyList())
 
             val result = apiService.retrievePost("Bearer $token")
 
-            if(result != null){
-                return Result.Success("$result", "Post retrieved successfully")
-
-            }else{
-                return  Result.Error("Error Retrieving post",result)
+            if (result.isNotEmpty()) {
+                return Result.Success(result, "Posts received Successfully")
+            } else {
+                return Result.Error("An error Occurred while retrieving", emptyList())
             }
-
-        }catch (e:Exception){
-            return Result.Error("An error occurred while recieving post","")
+        } catch (e: Exception) {
+            return Result.Error("Cannot Retrieve", emptyList())
+            }
         }
-    }
 
     override suspend fun retrievePostUser(): Result<List<GetPost>> {
         try {
