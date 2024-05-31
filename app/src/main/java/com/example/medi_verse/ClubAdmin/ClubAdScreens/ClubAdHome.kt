@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Share
@@ -99,12 +100,6 @@ fun ClubAdHome(context: Context,navController: NavController,remoteRepo: RemoteR
     }
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
-    val items =
-        listOf(
-            DrawerItem(Icons.Default.Share, "Share"),
-            DrawerItem(Icons.Default.Email, "Mail us"),
-        )
-
     var selectedItem by remember { mutableStateOf<DrawerItem?>(null) }
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -117,6 +112,8 @@ fun ClubAdHome(context: Context,navController: NavController,remoteRepo: RemoteR
             ) {
                 DrawerItem(Icons.Default.Share, "Share")
                 DrawerItem(Icons.Default.Email, "Mail us")
+                DrawerItem(Icons.Default.ExitToApp, "Log out")
+
             }
         },
         content = {
@@ -248,7 +245,7 @@ fun DisplayPost(post: List<GetPost>, onMenuIconClick: () -> Unit) {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeLayout(
+fun CLubHomeLayout(
     posts: List<GetPost>
 ) {
     Column(

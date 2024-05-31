@@ -151,6 +151,7 @@ fun ClubAdAddPosts (context: Context, navController: NavController, remoteRepo: 
                 }
             }
             var userdes by remember { mutableStateOf("") }
+
             TextField(
                 value = userdes,
                 onValueChange = { userdes = it },
@@ -171,25 +172,26 @@ fun ClubAdAddPosts (context: Context, navController: NavController, remoteRepo: 
             Button(
                 modifier = Modifier.background(Color.Transparent),
                 onClick = {
-                    imageUri?.let { uri ->
+                    if (userdes.isNotEmpty() && imageUri != null) {
                         GlobalScope.launch(Dispatchers.Main) {
-                            val imageUrl = uploadImageToFirebase(context, uri, userdes)
+                            val imageUrl = uploadImageToFirebase(context, imageUri!!, userdes)
                             imageUrl?.let { url ->
-                                // Create post object here
                                 val post = Post(
                                     image = url,
                                     description = userdes,
                                     time = System.currentTimeMillis()
                                 )
 
-                                // Call createPost function from RemoteRepo
                                 CoroutineScope(Dispatchers.IO).launch {
                                     val postReq = remoteRepo.createPost(post)
                                     createPostResult.value = postReq
                                 }
                             }
                         }
-                    } ?: Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    } else {
+                        Toast.makeText(context, "Please select an image and enter a description", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
@@ -197,8 +199,7 @@ fun ClubAdAddPosts (context: Context, navController: NavController, remoteRepo: 
                 )
             ) {
                 Text(text = "Post")
-            }
-        }
+            }}
 
         createPostResult.value?.let { result ->
             if (result is Result.Success) {
