@@ -72,6 +72,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.Formator.formatTimestamp
+import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.R
 import com.example.medi_verse.Student.StScreens.DrawerItem
@@ -82,11 +83,16 @@ import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
 import com.example.medi_verse.utils.Result
+import com.example.medi_verse.utils.SessionManager
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.getScopeName
 
-
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun ClubAdHome(context: Context,navController: NavController,remoteRepo: RemoteRepo) {
+fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: RemoteRepo,AppnavController:NavController,sessionManager: SessionManager) {
     val postResult = remember { mutableStateOf<Result<List<GetPost>>?>(null) }
 
     LaunchedEffect(Unit) {
@@ -100,6 +106,12 @@ fun ClubAdHome(context: Context,navController: NavController,remoteRepo: RemoteR
     }
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
+    val items =
+        listOf(
+            DrawerItem(Icons.Default.Share, "Share"),
+            DrawerItem(Icons.Default.Email, "Mail us"),
+            DrawerItem(Icons.Default.ExitToApp, "Logout")
+        )
     var selectedItem by remember { mutableStateOf<DrawerItem?>(null) }
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -110,9 +122,83 @@ fun ClubAdHome(context: Context,navController: NavController,remoteRepo: RemoteR
                     .width(280.dp)
                     .fillMaxHeight()
             ) {
-                DrawerItem(Icons.Default.Share, "Share")
-                DrawerItem(Icons.Default.Email, "Mail us")
-                DrawerItem(Icons.Default.ExitToApp, "Log out")
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background((Color.White)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(modifier = Modifier
+                        .background(Color.White)
+                        .padding(top = 20.dp, bottom = 30.dp), contentAlignment = Alignment.BottomCenter) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.boy),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .padding(bottom = 10.dp)
+                                    .size(150.dp)
+                            )
+                            var name by remember { mutableStateOf("") }
+                            var email by remember { mutableStateOf("") }
+                            LaunchedEffect(Unit) {
+                                name = sessionManager.getCurrentUsername() ?: ""
+                                email = sessionManager.getCurrentEmail() ?: ""
+                            }
+                            Text(
+                                text = name,
+                                color = Color(0xFF13315C),
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 10.dp)
+                            )
+                            Text(
+                                text = name+"@gmail.com",
+                                color = Color(0xFF13315C),
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 10.dp)
+                            )
+                        }
+                    }
+                }
+                items.forEach { item ->
+                    NavigationDrawerItem(
+                        label = { Text(text = item.label) },
+                        selected = item == selectedItem,
+                        onClick =
+                        {
+                            if (item.label=="Mail us"){
+                                openGmailApp(context)
+                                selectedItem=null
+                            }
+                            if (item.label=="Share"){
+                                openWhatsApp(context)
+                                selectedItem=null
+                            }
+                            if (item.label=="Logout"){
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    sessionManager.logout()
+                                }
+                                AppnavController.navigate(AppScreens.Decision.route)
+                                selectedItem=null
+                            }
+                            else{
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                selectedItem=null
+                            }
+                        },
+                        icon = { androidx.compose.material3.Icon(imageVector = item.icon, contentDescription = item.label) },
+                    )
+                }
 
             }
         },

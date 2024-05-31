@@ -107,7 +107,7 @@ class RemoteRepoImpl (
                 if (result.token != null) {
                     sessionManager.updateSession(
                         token = result.token.toString(),
-                        name = name?: "club",
+                        name = name?:club.username,
                         email = club.username
                     )
                     Result.Success(result.token)
