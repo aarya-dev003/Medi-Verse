@@ -49,7 +49,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun CollegeAdLogin(context: Context, AppnavController: NavController, remoteRepo: RemoteRepo) {
     val loginResult = remember { mutableStateOf<Result<String>?>(null) }
-    val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\$")
 
 
     Box(
@@ -157,7 +156,7 @@ fun CollegeAdLogin(context: Context, AppnavController: NavController, remoteRepo
                             email = useremailvalue.value,
                             password = userpasswordvalue.value
                         )
-                        if (useremailvalue.value.isEmpty() || !emailRegex.matches(useremailvalue.value)) {
+                        if (useremailvalue.value.isEmpty()) {
                             Toast.makeText(context, "Please enter a valid email", Toast.LENGTH_SHORT).show()
                             return@Button
                         }

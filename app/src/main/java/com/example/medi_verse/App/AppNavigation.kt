@@ -44,7 +44,7 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo, sessionManager: Sess
             ClubAdminMainScreen(context, remoteRepo,navController,sessionManager)
         }
         composable(route= AppScreens.CollegeAdminMainScreen.route){
-            CollegeAdminMainScreen(context,remoteRepo)
+            CollegeAdminMainScreen(context,remoteRepo,sessionManager,navController)
         }
         composable(route= AppScreens.CollegeAdLogin.route){
             CollegeAdLogin(context,AppnavController = navController, remoteRepo)

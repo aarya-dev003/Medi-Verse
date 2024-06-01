@@ -8,13 +8,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,6 +42,7 @@ import com.example.medi_verse.data.remote.model.RegisterRequest
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
 import com.example.medi_verse.utils.Result
+import com.example.medi_verse.utils.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,13 +50,42 @@ import okhttp3.Dispatcher
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, context: Context) {
+fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, context: Context, sessionManager: SessionManager, AppnavController:NavController) {
     val createClubResult = remember { mutableStateOf<Result<String>?>(null) }
     Box(
         modifier = Modifier
-            .fillMaxSize().background(BackgroundColor),
+            .fillMaxSize()
+            .background(BackgroundColor),
         contentAlignment = Alignment.TopCenter,
     ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end= 0.dp)
+        ){
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        sessionManager.logout()
+                    }
+                    AppnavController.navigate(AppScreens.Decision.route) {
+                        popUpTo(AppScreens.Decision.route) {
+                            inclusive = true
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(48.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Logout",
+                    tint = Color.Black
+                )
+            }
+        }
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
