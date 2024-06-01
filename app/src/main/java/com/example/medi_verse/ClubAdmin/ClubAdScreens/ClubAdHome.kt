@@ -182,12 +182,16 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
                                 openWhatsApp(context)
                                 selectedItem=null
                             }
-                            if (item.label=="Logout"){
+                            if (item.label == "Logout") {
                                 CoroutineScope(Dispatchers.IO).launch {
                                     sessionManager.logout()
                                 }
-                                AppnavController.navigate(AppScreens.Decision.route)
-                                selectedItem=null
+                                AppnavController.navigate(AppScreens.Decision.route) {
+                                    popUpTo(AppScreens.Decision.route) {
+                                        inclusive = true
+                                    }
+                                }
+                                selectedItem = null
                             }
                             else{
                                 scope.launch {

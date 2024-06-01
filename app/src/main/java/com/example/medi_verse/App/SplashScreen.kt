@@ -10,8 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -21,29 +19,39 @@ import com.example.medi_verse.utils.SessionManager
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen (navController: NavController, remoteRepo: RemoteRepo, sessionManager: SessionManager){
-    LaunchedEffect(key1 = true) {
+fun SplashScreen(navController: NavController, remoteRepo: RemoteRepo, sessionManager: SessionManager) {
+    LaunchedEffect(Unit) {
         delay(1000)
         val result = sessionManager.getLoginContext().toString()
         val token = sessionManager.getJwtToken()
-
-        if (result=="club" && token != null){
-            navController.navigate("ClubAdminMainScreen")
+        when {
+            result == "club" && token != null -> {
+                navController.navigate("ClubAdminMainScreen") {
+                    popUpTo("SplashScreen") { inclusive = true }
+                }
+            }
+            result == "admin" && token != null -> {
+                navController.navigate("CollegeAdminMainScreen") {
+                    popUpTo("SplashScreen") { inclusive = true }
+                }
+            }
+            result == "user" && token != null -> {
+                navController.navigate("HomeMainScreen") {
+                    popUpTo("SplashScreen") { inclusive = true }
+                }
+            }
+            else -> {
+                navController.navigate("AppScreens") {
+                    popUpTo("SplashScreen") { inclusive = true }
+                }
+            }
         }
-        else if (result=="admin" && token != null){
-            navController.navigate("CollegeAdminMainScreen")
-        }
-        else if (result=="user" && token != null){
-            navController.navigate("HomeMainScreen")
-        }
-        else{
-            navController.navigate("Decision")
-        }
-
-
     }
+
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.White),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
         contentAlignment = Alignment.Center,
     ) {
         Image(
@@ -52,7 +60,6 @@ fun SplashScreen (navController: NavController, remoteRepo: RemoteRepo, sessionM
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxSize(),
-//            colorFilter = ColorFilter.tint(Color.Black)
         )
     }
 }

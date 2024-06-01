@@ -17,12 +17,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +36,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,8 +84,14 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ){
-                val useremailvalue= remember { mutableStateOf("") }
-                val userpasswordvalue= remember { mutableStateOf("") }
+                var useremailvalue= remember { mutableStateOf("") }
+                var userpasswordvalue= remember { mutableStateOf("") }
+                var userpassvisiblity by remember { mutableStateOf(false) }
+                val icon = if (userpassvisiblity) {
+                    painterResource(id = com.google.android.material.R.drawable.design_ic_visibility)
+                } else {
+                    painterResource(id = com.google.android.material.R.drawable.design_ic_visibility_off)
+                }
                 TextField(value =useremailvalue.value , onValueChange = { useremailvalue.value=it},label = { Text(text = "Enter email") },
                     modifier = Modifier
                         .padding(vertical = 18.dp),
@@ -103,9 +114,27 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                     textStyle = TextStyle(color = Color.Black),
                     shape = RoundedCornerShape(12.dp)
                 )
-                TextField(value =userpasswordvalue.value , onValueChange = { userpasswordvalue.value=it},label = { Text(text = "Enter password") },
-                    modifier = Modifier
-                        .padding(vertical = 18.dp),
+                TextField(
+                    value = userpasswordvalue.value,
+                    onValueChange = { userpasswordvalue.value = it },
+                    label = { Text(text = "Enter password") },
+                    modifier = Modifier.padding(vertical = 18.dp),
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            userpassvisiblity = !userpassvisiblity
+                        }) {
+                            Icon(
+                                painter = icon,
+                                contentDescription = "visibility toggle",
+                                modifier = Modifier.padding(1.dp)
+                            )
+                        }
+                    },
+                    visualTransformation = if (userpassvisiblity) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
                     colors = TextFieldDefaults.textFieldColors(
                         cursorColor = Color.Black,
                         unfocusedLabelColor = Color.Black,
@@ -118,8 +147,8 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                     ),
                     textStyle = TextStyle(color = Color.Black),
                     shape = RoundedCornerShape(12.dp)
-
                 )
+
                 Button(onClick = {
                                  val club = ClubLoginRequest(
                                      username = useremailvalue.value,

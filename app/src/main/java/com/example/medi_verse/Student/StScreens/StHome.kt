@@ -65,6 +65,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -76,9 +77,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import com.example.medi_verse.App.AppScreens
+import com.example.medi_verse.utils.SessionManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRepo) {
+fun StHome(context: Context, HomenavController: NavController, remoteRepo: RemoteRepo,sessionManager: SessionManager,AppnavController:NavController) {
     val postResult = remember { mutableStateOf<Result<List<GetPost>>?>(null) }
 
     LaunchedEffect(Unit) {
@@ -95,6 +100,7 @@ fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRep
         listOf(
             DrawerItem(Icons.Default.Share, "Share"),
             DrawerItem(Icons.Default.Email, "Mail us"),
+            DrawerItem(Icons.Default.ExitToApp, "Logout")
         )
 
     var selectedItem by remember { mutableStateOf<DrawerItem?>(null) }
@@ -107,8 +113,91 @@ fun StHome(context: Context, navController: NavController, remoteRepo: RemoteRep
                     .width(280.dp)
                     .fillMaxHeight()
             ) {
-                DrawerItem(Icons.Default.Share, "Share")
-                DrawerItem(Icons.Default.Email, "Mail us")            }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background((Color.White)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(modifier = Modifier
+                        .background(Color.White)
+                        .padding(top = 20.dp, bottom = 30.dp), contentAlignment = Alignment.BottomCenter) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.boy),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .padding(bottom = 10.dp)
+                                    .size(150.dp)
+                            )
+                            var name by remember { mutableStateOf("") }
+                            var email by remember { mutableStateOf("") }
+                            LaunchedEffect(Unit) {
+                                name = sessionManager.getCurrentUsername() ?: ""
+                                email = sessionManager.getCurrentEmail() ?: ""
+                            }
+                            Text(
+                                text = name,
+                                color = Color(0xFF13315C),
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 10.dp)
+                            )
+                            Text(
+                                text = name+"@gmail.com",
+                                color = Color(0xFF13315C),
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(start = 10.dp)
+                            )
+                        }
+                    }
+                }
+                items.forEach { item ->
+                    NavigationDrawerItem(
+                        label = { Text(text = item.label) },
+                        selected = item == selectedItem,
+                        onClick =
+                        {
+                            if (item.label=="Mail us"){
+                                openGmailApp(context)
+                                selectedItem=null
+                            }
+                            if (item.label=="Share"){
+                                openWhatsApp(context)
+                                selectedItem=null
+                            }
+                            if (item.label == "Logout") {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    sessionManager.logout()
+                                }
+                                AppnavController.navigate(AppScreens.Decision.route) {
+                                    popUpTo(AppScreens.Decision.route) {
+                                        inclusive = true
+                                    }
+                                }
+                                selectedItem = null
+                            }
+
+                            else{
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                selectedItem=null
+                            }
+                        },
+                        icon = { androidx.compose.material3.Icon(imageVector = item.icon, contentDescription = item.label) },
+                    )
+                }
+
+
+            }
         },
         content = {
             postResult.value?.let { result ->

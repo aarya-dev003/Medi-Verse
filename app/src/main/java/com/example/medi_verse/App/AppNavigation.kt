@@ -32,7 +32,7 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo, sessionManager: Sess
             StLogin(context ,AppnavController = navController, remoteRepo)
         }
         composable(route= AppScreens.HomeMainScreen.route){
-            HomeMainScreen(context = context,remoteRepo)
+            HomeMainScreen(context = context,remoteRepo,sessionManager,navController)
         }
         composable(route= AppScreens.StSignUp.route){
             StSignup(context, AppnavController = navController, remoteRepo)
