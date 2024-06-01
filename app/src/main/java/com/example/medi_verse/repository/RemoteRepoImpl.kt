@@ -15,6 +15,7 @@ import com.example.medi_verse.utils.Result.Success
 import com.example.medi_verse.utils.SessionManager
 import com.example.medi_verse.utils.isNetworkConnected
 import com.example.requests.ClubLoginRequest
+import retrofit2.HttpException
 
 class RemoteRepoImpl (
     private val apiService: ApiService,
@@ -47,7 +48,7 @@ class RemoteRepoImpl (
     override suspend fun loginUser(user: LoginRequest): Result<String> {
         return try {
             if (!isNetworkConnected(sessionManager.context)) {
-                Error("No Internet Connection!", "")
+                Result.Error("No Internet Connection!", "")
             } else {
                 val result = apiService.loginUser(user)
                 val name = sessionManager.getCurrentUsername()
@@ -55,7 +56,7 @@ class RemoteRepoImpl (
                 if (result.token != null) {
                     sessionManager.updateSession(
                         token = result.token.toString(),
-                        name = name?: "student",
+                        name = name ?: "student",
                         email = user.email
                     )
                     Result.Success(result.token)
@@ -63,10 +64,17 @@ class RemoteRepoImpl (
                     Result.Error("Some Error Occurred!", "")
                 }
             }
-        } catch (e : Exception) {
-            Error(e.message ?: "Some Problem Occurred!", "")
+        } catch (e: HttpException) {
+            if (e.code() == 409) {
+                Result.Error("Invalid Credentials", "")
+            } else {
+                Result.Error(e.message ?: "Some Problem Occurred!", "")
+            }
+        } catch (e: Exception) {
+            Result.Error(e.message ?: "Some Problem Occurred!", "")
         }
     }
+
     override suspend fun getUser(): Result<RegisterRequest> {
         return try {
             val context = sessionManager.getLoginContext()

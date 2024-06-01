@@ -51,7 +51,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: RemoteRepo) {
@@ -59,7 +58,6 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
     Box(
         modifier = Modifier
             .fillMaxSize(),
-
         contentAlignment = Alignment.TopCenter,
     ) {
         Image(painter = painterResource(id = R.drawable.loginbackground), contentDescription = "Demo image", modifier = Modifier.matchParentSize(), contentScale = ContentScale.FillBounds)
@@ -83,24 +81,23 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                     .padding(top = 15.dp)
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-            ){
-                var useremailvalue= remember { mutableStateOf("") }
-                var userpasswordvalue= remember { mutableStateOf("") }
+            ) {
+                var useremailvalue = remember { mutableStateOf("") }
+                var userpasswordvalue = remember { mutableStateOf("") }
                 var userpassvisiblity by remember { mutableStateOf(false) }
+                val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\$")
                 val icon = if (userpassvisiblity) {
                     painterResource(id = com.google.android.material.R.drawable.design_ic_visibility)
                 } else {
                     painterResource(id = com.google.android.material.R.drawable.design_ic_visibility_off)
                 }
-                TextField(value =useremailvalue.value , onValueChange = { useremailvalue.value=it},label = { Text(text = "Enter email") },
-                    modifier = Modifier
-                        .padding(vertical = 18.dp),
-//                        trailingIcon = {
-//                                       Icon(
-//                                           painter = painterResource(id = R.drawable.lockiconlogin) ,
-//                                           contentDescription = "lock",
-//                                       )
-//                        },
+                TextField(
+                    value = useremailvalue.value,
+                    onValueChange = { newValue ->
+                        useremailvalue.value = newValue
+                    },
+                    label = { Text(text = "Enter email") },
+                    modifier = Modifier.padding(vertical = 18.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         cursorColor = Color.Black,
                         unfocusedLabelColor = Color.Black,
@@ -110,13 +107,17 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         containerColor = Color.White,
-                    ),
+                        errorLabelColor = Color.Red,
+                        ),
                     textStyle = TextStyle(color = Color.Black),
                     shape = RoundedCornerShape(12.dp)
                 )
+
                 TextField(
                     value = userpasswordvalue.value,
-                    onValueChange = { userpasswordvalue.value = it },
+                    onValueChange = {
+                        userpasswordvalue.value = it
+                    },
                     label = { Text(text = "Enter password") },
                     modifier = Modifier.padding(vertical = 18.dp),
                     trailingIcon = {
@@ -148,24 +149,31 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                     textStyle = TextStyle(color = Color.Black),
                     shape = RoundedCornerShape(12.dp)
                 )
-
-                Button(onClick = {
-                                 val club = ClubLoginRequest(
-                                     username = useremailvalue.value,
-                                     password = userpasswordvalue.value
-                                 )
-                    CoroutineScope(Dispatchers.IO).launch {
-                        // Call the createUser method from the RemoteRepo
-                        val result = remoteRepo.loginClub(club)
-                        loginResult.value = result
-                    }
-
-                                 },
+                Button(
+                    onClick = {
+                        val club = ClubLoginRequest(
+                            username = useremailvalue.value,
+                            password = userpasswordvalue.value
+                        )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val result = remoteRepo.loginClub(club)
+                            loginResult.value = result
+                        }
+                        if (useremailvalue.value.isEmpty() || !emailRegex.matches(useremailvalue.value)) {
+                            Toast.makeText(context, "Please enter a valid email", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+                        if (userpasswordvalue.value.isEmpty()) {
+                            Toast.makeText(context, "Please enter a valid password", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+                    },
                     modifier = Modifier.size(width = 150.dp, height = 50.dp),
-                    colors= ButtonDefaults.buttonColors(
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Black,
                         contentColor = Color.White,
-                    ), ) {
+                    ),
+                ) {
                     Text(text = "Login")
                 }
             }
@@ -173,13 +181,12 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
             loginResult.value?.let { result ->
                 if (result is Result.Success) {
                     AppnavController.navigate(AppScreens.ClubAdminMainScreen.route)
-                }else if(result is Result.Error){
+                } else if (result is Result.Error) {
                     Toast.makeText(context, result.errorMessage.toString().trim(), Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(context, "Some Unexpected Error Occured", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Some Unexpected Error Occurred", Toast.LENGTH_SHORT).show()
                 }
             }
-
         }
     }
 }

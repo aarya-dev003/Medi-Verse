@@ -15,12 +15,16 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +35,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,15 +77,17 @@ fun StSignup(context : Context, AppnavController: NavController, remoteRepo: Rem
             val newuserusernamevalue= remember { mutableStateOf("") }
             val newuseremailvalue= remember { mutableStateOf("") }
             val newuserpasswordvalue= remember { mutableStateOf("") }
+            var userpasswordvalue = remember { mutableStateOf("") }
+            var userpassvisiblity by remember { mutableStateOf(false) }
+            val icon = if (userpassvisiblity) {
+                painterResource(id = com.google.android.material.R.drawable.design_ic_visibility)
+            } else {
+                painterResource(id = com.google.android.material.R.drawable.design_ic_visibility_off)
+            }
             TextField(value =newusernamevalue.value , onValueChange = { newusernamevalue.value=it},label = { Text(text = "Enter name")},
                 modifier = Modifier
                     .padding(vertical = 18.dp),
-//                        trailingIcon = {
-//                                       Icon(
-//                                           painter = painterResource(id = R.drawable.lockiconlogin) ,
-//                                           contentDescription = "lock",
-//                                       )
-//                        },
+
 
                 colors = TextFieldDefaults.textFieldColors(
                     cursorColor = Color.Black,
@@ -141,12 +149,22 @@ fun StSignup(context : Context, AppnavController: NavController, remoteRepo: Rem
             TextField(value =newuserpasswordvalue.value , onValueChange = { newuserpasswordvalue.value=it},label = { Text(text = "Enter password")},
                 modifier = Modifier
                     .padding(vertical = 18.dp),
-//                        trailingIcon = {
-//                                       Icon(
-//                                           painter = painterResource(id = R.drawable.lockiconlogin) ,
-//                                           contentDescription = "lock",
-//                                       )
-//                        },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        userpassvisiblity = !userpassvisiblity
+                    }) {
+                        Icon(
+                            painter = icon,
+                            contentDescription = "visibility toggle",
+                            modifier = Modifier.padding(1.dp)
+                        )
+                    }
+                },
+                visualTransformation = if (userpassvisiblity) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
                 colors = TextFieldDefaults.textFieldColors(
                     cursorColor = Color.Black,
                     unfocusedLabelColor = Color.Black,
@@ -168,9 +186,7 @@ fun StSignup(context : Context, AppnavController: NavController, remoteRepo: Rem
                     email = newuseremailvalue.value
                 )
 
-                // Launch a coroutine scope
                 CoroutineScope(Dispatchers.IO).launch {
-                    // Call the createUser method from the RemoteRepo
                     val result = remoteRepo.createUser(newUser)
                     loginResult.value = result
                 }

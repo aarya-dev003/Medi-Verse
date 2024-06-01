@@ -3,6 +3,7 @@ package com.example.medi_verse.Student.StudentLoginSignup
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,6 +60,7 @@ fun StLogin(context: Context, AppnavController: NavController, remoteRepo: Remot
     var userpassvisiblity by remember { mutableStateOf(false) }
     val loginResult = remember { mutableStateOf<Result<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\$")
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -102,7 +104,9 @@ fun StLogin(context: Context, AppnavController: NavController, remoteRepo: Remot
 
                 TextField(
                     value = useremailvalue.value,
-                    onValueChange = { useremailvalue.value = it },
+                    onValueChange = { newValue ->
+                        useremailvalue.value = newValue
+                    },
                     label = { Text(text = "Enter email") },
                     modifier = Modifier.padding(vertical = 18.dp),
                     colors = TextFieldDefaults.textFieldColors(
@@ -114,14 +118,18 @@ fun StLogin(context: Context, AppnavController: NavController, remoteRepo: Remot
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         containerColor = Color.White,
-                    ),
+                        errorLabelColor = Color.Red,
+
+                        ),
                     textStyle = TextStyle(color = Color.Black),
                     shape = RoundedCornerShape(12.dp)
                 )
 
                 TextField(
                     value = userpasswordvalue.value,
-                    onValueChange = { userpasswordvalue.value = it },
+                    onValueChange = {
+                        userpasswordvalue.value = it
+                    },
                     label = { Text(text = "Enter password") },
                     modifier = Modifier.padding(vertical = 18.dp),
                     trailingIcon = {
@@ -154,14 +162,23 @@ fun StLogin(context: Context, AppnavController: NavController, remoteRepo: Remot
                     shape = RoundedCornerShape(12.dp)
                 )
 
+
+
                 Button(
                     onClick = {
+                        if (useremailvalue.value.isEmpty() || !emailRegex.matches(useremailvalue.value)) {
+                            Toast.makeText(context, "Please enter a valid email", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+                        if (userpasswordvalue.value.isEmpty()) {
+                            Toast.makeText(context, "Please enter a valid password", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
                         val newUser = LoginRequest(
                             email = useremailvalue.value,
                             password = userpasswordvalue.value
                         )
                         coroutineScope.launch {
-                            // Call the createUser method from the RemoteRepo
                             val result = remoteRepo.loginUser(newUser)
                             loginResult.value = result
                         }
