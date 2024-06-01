@@ -5,13 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.medi_verse.ClubAdmin.ClubAdLoginSignUp.ClubAdLogin
-import com.example.medi_verse.ClubAdmin.ClubAdminMainScreen
-import com.example.medi_verse.CollegeAdmin.CollegeAdminMainScreen
-import com.example.medi_verse.CollegeAdmin.LoginSignUp.CollegeAdLogin
-import com.example.medi_verse.Student.HomeMainScreen
-import com.example.medi_verse.Student.StudentLoginSignup.StLogin
-import com.example.medi_verse.Student.StudentLoginSignup.StSignup
+import com.example.medi_verse.presentation.ClubAdmin.ClubAdLoginSignUp.ClubAdLogin
+import com.example.medi_verse.presentation.ClubAdmin.ClubAdminMainScreen
+import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdminMainScreen
+import com.example.medi_verse.presentation.CollegeAdmin.LoginSignUp.CollegeAdLogin
+import com.example.medi_verse.presentation.Student.HomeMainScreen
+import com.example.medi_verse.presentation.Student.StudentLoginSignup.StLogin
+import com.example.medi_verse.presentation.Student.StudentLoginSignup.StSignup
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.utils.SessionManager
 
