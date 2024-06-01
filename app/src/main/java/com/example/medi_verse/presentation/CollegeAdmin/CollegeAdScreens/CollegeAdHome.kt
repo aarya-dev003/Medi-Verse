@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -145,7 +146,7 @@ fun FeedbackLayout(item: FeedbackItem) {
                     color = Color.Gray,
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)
+                    modifier = Modifier.fillMaxWidth().padding(start = 90.dp,bottom = 10.dp, end = 5.dp)
                 )
             }
         }

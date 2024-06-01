@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.RegisterRequest
+import com.example.medi_verse.presentation.Student.StNav.HomeBottomBarScreen
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
 import com.example.medi_verse.utils.Result
@@ -202,6 +203,10 @@ fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, c
                     val result = remoteRepo.createClubAdmin(registerClub)
                     createClubResult.value = result
                 }
+//                navController.navigate(route = HomeBottomBarScreen.Home.route) {
+//                    popUpTo(route = ) {
+//                        inclusive = true
+//                    }
             },
                 modifier = Modifier.size(width = 150.dp, height = 50.dp),
                 colors= ButtonDefaults.buttonColors(

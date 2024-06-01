@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.example.medi_verse.App.AppNavigation
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.presentation.Student.StNav.HomeBottomBarScreen
 import com.example.medi_verse.data.remote.model.FeedbackRequest
@@ -161,7 +162,12 @@ fun StFeedback(navController: NavController, context: Context, remoteRepo: Remot
                                     val feedbackReq = remoteRepo.createFeedback(feedback)
                                     createPostResult.value = feedbackReq
                                 }
-                            },
+                                navController.navigate(route = HomeBottomBarScreen.Home.route) {
+                                    popUpTo(route = HomeBottomBarScreen.Home.route) {
+                                        inclusive = true
+                                    }
+                                }
+                             },
                             modifier = Modifier
                                 .padding(top = 10.dp)
                                 .align(Alignment.CenterHorizontally),
@@ -177,8 +183,6 @@ fun StFeedback(navController: NavController, context: Context, remoteRepo: Remot
                     createPostResult.value?.let { result ->
                         if (result is Result.Success) {
                             Toast.makeText(context, "Feedback Sent", Toast.LENGTH_SHORT).show()
-                        } else if (result is Result.Error) {
-                            Toast.makeText(context, result.errorMessage.toString().trim(), Toast.LENGTH_SHORT).show()
                         } else {
 //                            Toast.makeText(context, "Some Unexpected Error Occured", Toast.LENGTH_SHORT).show()
                         }
