@@ -64,5 +64,8 @@ object Constants {
     const val SEARCH_POST = "$API_VERSION/$POST_TYPE/search/user"
     const val SEARCH_POST_CLUB = "$API_VERSION/$POST_TYPE/search/club"
 
+    //get club data
+    const val GET_CLUB_DATA = "$API_VERSION/$LOGIN_TYPE/get"
+
 
 }

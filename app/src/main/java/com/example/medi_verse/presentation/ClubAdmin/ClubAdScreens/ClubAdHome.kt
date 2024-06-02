@@ -75,6 +75,7 @@ import com.example.medi_verse.presentation.Formator.formatTimestamp
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.presentation.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.R
+import com.example.medi_verse.data.remote.model.ClubDto
 import com.example.medi_verse.presentation.Student.StScreens.DrawerItem
 import com.example.medi_verse.presentation.Student.StScreens.ScafoldContent
 import com.example.medi_verse.presentation.Student.StScreens.openGmailApp
@@ -94,6 +95,8 @@ import org.koin.core.component.getScopeName
 @Composable
 fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: RemoteRepo,AppnavController:NavController,sessionManager: SessionManager) {
     val postResult = remember { mutableStateOf<Result<List<GetPost>>?>(null) }
+    val clubData = remember { mutableStateOf<Result<ClubDto>?>(null) }
+
 
     LaunchedEffect(Unit) {
         try {
@@ -113,6 +116,15 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
             DrawerItem(Icons.Default.ExitToApp, "Logout")
         )
     var selectedItem by remember { mutableStateOf<DrawerItem?>(null) }
+    LaunchedEffect(Unit) {
+        try{
+            val clubDto = remoteRepo.getClubData()
+            clubData.value = clubDto
+        }catch (e: Exception){
+            clubData.value =
+                Result.Error(e.message ?: "An unexpected error Occured", null)
+        }
+    }
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = true,
@@ -136,19 +148,43 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
                                 .fillMaxWidth()
                                 .align(Alignment.BottomCenter)
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.boy),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .padding(bottom = 10.dp)
-                                    .size(150.dp)
-                            )
+
+
                             var name by remember { mutableStateOf("") }
                             var email by remember { mutableStateOf("") }
-                            LaunchedEffect(Unit) {
-                                name = sessionManager.getCurrentUsername() ?: ""
-                                email = sessionManager.getCurrentEmail() ?: ""
+                            var image by remember {
+                                mutableStateOf("")
                             }
+                            LaunchedEffect(clubData.value) {
+                                when (val result = clubData.value) {
+                                    is Result.Success -> {
+                                        name = result.data?.name ?: "club"
+                                        email = result.data?.email ?: "clubEmail"
+                                        image = result.data?.imageUrl ?: R.drawable.boy.toString()
+                                    }
+                                    is Result.Error -> {
+                                        // Handle error case, for example, show an error message
+                                    }
+                                    // Handle loading state if needed
+                                    null -> {
+                                        // Handle loading state if needed
+                                    }
+
+                                    is Result.Loading -> TODO()
+                                }
+                            }
+                            AsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(350.dp)
+                                    .padding(horizontal = 16.dp)
+                                    .clip(RoundedCornerShape(16.dp)),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(image).build(),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop
+                            )
+
                             Text(
                                 text = name,
                                 color = Color(0xFF13315C),
@@ -158,7 +194,7 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
                                 modifier = Modifier.padding(start = 10.dp)
                             )
                             Text(
-                                text = name+"@gmail.com",
+                                text = email,
                                 color = Color(0xFF13315C),
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.Monospace,
