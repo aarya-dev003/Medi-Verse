@@ -1,10 +1,13 @@
 package com.example.medi_verse.App
 
+import ClubAdminSearchResults
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.medi_verse.presentation.ClubAdmin.ClubAdLoginSignUp.ClubAdLogin
 import com.example.medi_verse.presentation.ClubAdmin.ClubAdminMainScreen
 import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdminMainScreen
@@ -51,5 +54,13 @@ fun AppNavigation(context: Context, remoteRepo: RemoteRepo, sessionManager: Sess
         }
         composable(route= AppScreens.CollegeAdSignup.route){
         }
+        composable(
+            route = "${AppScreens.ClubAdminSearchResults.route}/{searchText}",
+            arguments = listOf(navArgument("userQuery") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val searchText = backStackEntry.arguments?.getString("searchText")
+            searchText?.let { ClubAdminSearchResults(remoteRepo, it) }
+        }
+
     }
 }
