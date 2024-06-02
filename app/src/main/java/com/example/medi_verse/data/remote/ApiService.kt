@@ -3,6 +3,7 @@ package com.example.medi_verse.data.remote
 import com.example.medi_verse.data.remote.model.Announcement
 import com.example.medi_verse.data.remote.model.AuthResponse
 import com.example.medi_verse.data.remote.model.ClubDto
+import com.example.medi_verse.data.remote.model.ClubRegisterRequest
 import com.example.medi_verse.data.remote.model.FeedbackItem
 import com.example.medi_verse.data.remote.model.FeedbackRequest
 import com.example.medi_verse.data.remote.model.GetPost
@@ -35,9 +36,9 @@ import retrofit2.http.POST
 
 interface ApiService {
     companion object{
-//        const val BASE_URL = "https://social-media-server-mva3.onrender.com"
-        const val BASE_URL = "https://aaryaworks.tech/"
-       // const val BASE_URL = "http://10.0.2.2:8080/"
+        const val BASE_URL = "https://social-media-server-mva3.onrender.com"
+//        const val BASE_URL = "https://aaryaworks.tech/"
+//        const val BASE_URL = "http://192.168.1.8:8080/"
     }
 
     //for users (student)
@@ -107,7 +108,7 @@ interface ApiService {
     @POST(CREATE_CLUB)
     suspend fun createClub(
         @Header ("Authorization") token : String,
-        @Body club : RegisterRequest
+        @Body club : ClubRegisterRequest
     ): AuthResponse
 
 
