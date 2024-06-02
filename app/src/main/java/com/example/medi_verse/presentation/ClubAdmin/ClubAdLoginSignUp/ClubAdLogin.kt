@@ -96,7 +96,7 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                     onValueChange = { newValue ->
                         useremailvalue.value = newValue
                     },
-                    label = { Text(text = "Enter email") },
+                    label = { Text(text = "Enter Username") },
                     modifier = Modifier.padding(vertical = 18.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         cursorColor = Color.Black,
@@ -159,7 +159,7 @@ fun ClubAdLogin(context : Context, AppnavController: NavController, remoteRepo: 
                             val result = remoteRepo.loginClub(club)
                             loginResult.value = result
                         }
-                        if (useremailvalue.value.isEmpty() || !emailRegex.matches(useremailvalue.value)) {
+                        if (useremailvalue.value.isEmpty()) {
                             Toast.makeText(context, "Please enter a valid email", Toast.LENGTH_SHORT).show()
                             return@Button
                         }

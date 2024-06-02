@@ -1,6 +1,8 @@
 package com.example.medi_verse.repository
 
 import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.ClubDto
+import com.example.medi_verse.data.remote.model.ClubRegisterRequest
 import com.example.medi_verse.data.remote.model.FeedbackItem
 import com.example.medi_verse.data.remote.model.FeedbackRequest
 import com.example.medi_verse.data.remote.model.GetPost
@@ -27,7 +29,7 @@ interface RemoteRepo {
     //for collegeAdmin
     suspend fun loginAdmin(admin: LoginRequest): Result<String>
 
-    suspend fun createClubAdmin(club: RegisterRequest): Result<String>
+    suspend fun createClubAdmin(club: ClubRegisterRequest): Result<String>
 
     //posts
     suspend fun createPost(post : Post) : Result<String>
@@ -47,5 +49,7 @@ interface RemoteRepo {
 
     suspend fun searchPostClub(search : SearchPost) : Result<List<GetPost>>
     suspend fun searchPostUser(search : SearchPost) : Result<List<GetPost>>
+
+    suspend fun getClubData(): Result<ClubDto>
 
 }

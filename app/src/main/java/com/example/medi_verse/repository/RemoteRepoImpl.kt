@@ -3,6 +3,8 @@ package com.example.medi_verse.repository
 import android.util.Log
 import com.example.medi_verse.data.remote.ApiService
 import com.example.medi_verse.data.remote.model.Announcement
+import com.example.medi_verse.data.remote.model.ClubDto
+import com.example.medi_verse.data.remote.model.ClubRegisterRequest
 import com.example.medi_verse.data.remote.model.FeedbackItem
 import com.example.medi_verse.data.remote.model.FeedbackRequest
 import com.example.medi_verse.data.remote.model.GetPost
@@ -230,7 +232,7 @@ class RemoteRepoImpl (
         }
     }
 
-    override suspend fun createClubAdmin(club: RegisterRequest): Result<String> {
+    override suspend fun createClubAdmin(club: ClubRegisterRequest): Result<String> {
         return try {
             if (!isNetworkConnected(sessionManager.context)) {
                 Result.Error("No Internet Connection!","")
@@ -347,6 +349,23 @@ class RemoteRepoImpl (
             }
         } catch (e: Exception) {
             return Result.Error("Cannot Retrieve", emptyList())
+        }
+    }
+
+    override suspend fun getClubData(): Result<ClubDto> {
+        try {
+            val token = sessionManager.getJwtToken() ?:
+                return Result.Error("jwt token does not exist", null)
+
+            val result = apiService.getClubData("Bearer $token")
+
+            return if (result != null ) {
+                Result.Success(result, "")
+            } else {
+                Result.Error("Cannot Retrieve Club Data", result)
+            }
+        } catch (e: Exception) {
+            return Result.Error("$e.message ?: An error occurred", null)
         }
     }
 }
