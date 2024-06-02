@@ -183,7 +183,7 @@ fun StSignup(context : Context, AppnavController: NavController, remoteRepo: Rem
                     name = newusernamevalue.value,
                     username = newuserusernamevalue.value,
                     password = newuserpasswordvalue.value,
-                    email = newuseremailvalue.value
+                    email = newuseremailvalue.value.lowercase()
                 )
 
                 CoroutineScope(Dispatchers.IO).launch {

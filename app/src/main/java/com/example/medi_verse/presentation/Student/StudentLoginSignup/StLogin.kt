@@ -103,7 +103,7 @@ fun StLogin(context: Context, AppnavController: NavController, remoteRepo: Remot
                 }
 
                 TextField(
-                    value = useremailvalue.value,
+                    value = useremailvalue.value.lowercase(),
                     onValueChange = { newValue ->
                         useremailvalue.value = newValue
                     },

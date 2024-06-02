@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -52,7 +53,11 @@ import com.example.medi_verse.data.remote.model.ClubRegisterRequest
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
+
+import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdNav.CollegeAdBottomBarScreen
+
 import com.example.medi_verse.presentation.Formator.uploadImageToFirebase
+
 import com.example.medi_verse.presentation.Student.StNav.HomeBottomBarScreen
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
@@ -63,7 +68,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.Dispatcher
+
+import java.util.Locale
+
 import kotlin.math.round
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -251,6 +260,7 @@ fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, c
                 textStyle = TextStyle(color = Color.Black),
                 shape = RoundedCornerShape(12.dp)
             )
+            
             Button(onClick = {
                 GlobalScope.launch(Dispatchers.Main) {
                     val imageUrl = uploadImageToFirebase(context, imageUri!!, newusernamevalue.toString(), "club_admin")
@@ -271,24 +281,21 @@ fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, c
                 }
 
 
-
-
-
 //                navController.navigate(route = HomeBottomBarScreen.Home.route) {
 //                    popUpTo(route = ) {
 //                        inclusive = true
 //                    }
             },
+
                 modifier = Modifier.size(width = 150.dp, height = 50.dp),
                 colors= ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
                     contentColor = Color.White,
-                ), ) {
+                )
+            ) {
                 Text(text = "Register")
             }
 
-
-        }
         createClubResult.value?.let { result ->
             if (result is Result.Success) {
                 navController.navigate(AppScreens.CollegeAdminMainScreen.route) {
@@ -305,4 +312,4 @@ fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, c
 
     }
 
-}
+}}
