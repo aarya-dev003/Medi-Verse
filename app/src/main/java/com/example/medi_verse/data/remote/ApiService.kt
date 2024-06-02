@@ -3,6 +3,7 @@ package com.example.medi_verse.data.remote
 import com.example.medi_verse.data.remote.model.Announcement
 import com.example.medi_verse.data.remote.model.AuthResponse
 import com.example.medi_verse.data.remote.model.ClubDto
+import com.example.medi_verse.data.remote.model.ClubRegisterRequest
 import com.example.medi_verse.data.remote.model.FeedbackItem
 import com.example.medi_verse.data.remote.model.FeedbackRequest
 import com.example.medi_verse.data.remote.model.GetPost
@@ -107,7 +108,7 @@ interface ApiService {
     @POST(CREATE_CLUB)
     suspend fun createClub(
         @Header ("Authorization") token : String,
-        @Body club : RegisterRequest
+        @Body club : ClubRegisterRequest
     ): AuthResponse
 
 
