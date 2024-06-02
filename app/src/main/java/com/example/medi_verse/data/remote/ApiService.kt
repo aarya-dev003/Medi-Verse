@@ -8,6 +8,7 @@ import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
+import com.example.medi_verse.data.remote.model.SearchPost
 import com.example.requests.ClubLoginRequest
 import com.example.utils.Constants.ADMIN_LOGIN
 import com.example.utils.Constants.CREATE_ANNOUNCEMENT
@@ -22,6 +23,8 @@ import com.example.utils.Constants.LOGIN_END_POINT
 import com.example.utils.Constants.REGISTER_END_POINT
 import com.example.utils.Constants.RETRIEVE_END_POINT
 import com.example.utils.Constants.RETRIEVE_END_POINT_USER
+import com.example.utils.Constants.SEARCH_POST
+import com.example.utils.Constants.SEARCH_POST_CLUB
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -131,5 +134,22 @@ interface ApiService {
     suspend fun getFeedbackAdmin(
         @Header ("Authorization") token : String
     ): List<FeedbackItem>
+
+
+    @Headers("Content-Type: application/json")
+    @GET(SEARCH_POST_CLUB)
+    suspend fun searchPostClub(
+        @Header ("Authorization") token : String,
+        @Body searchPost: SearchPost
+    ): List<GetPost>
+
+    @Headers("Content-Type: application/json")
+    @GET(SEARCH_POST)
+    suspend fun searchPostUser(
+        @Header ("Authorization") token : String,
+        @Body searchPost: SearchPost
+    ): List<GetPost>
+
+
 
 }

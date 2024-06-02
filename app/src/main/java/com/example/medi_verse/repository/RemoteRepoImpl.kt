@@ -9,6 +9,7 @@ import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
+import com.example.medi_verse.data.remote.model.SearchPost
 import com.example.medi_verse.utils.Result
 import com.example.medi_verse.utils.Result.Error
 import com.example.medi_verse.utils.Result.Success
@@ -188,8 +189,8 @@ class RemoteRepoImpl (
             }
         } catch (e: Exception) {
             return Result.Error("Cannot Retrieve", emptyList())
-            }
         }
+    }
 
     override suspend fun retrievePostUser(): Result<List<GetPost>> {
         try {
@@ -312,6 +313,40 @@ class RemoteRepoImpl (
             }
         } catch (e: Exception) {
             return Result.Error("$e.message ?: An error occurred while receiving Feedbacks", emptyList())
+        }
+    }
+
+    override suspend fun searchPostClub(search : SearchPost): Result<List<GetPost>> {
+        try {
+            val token = sessionManager.getJwtToken()
+                ?: return Result.Error("No token Exists", emptyList())
+
+            val result = apiService.searchPostClub("Bearer $token", search)
+
+            if (result.isNotEmpty()) {
+                return Result.Success(result, "Posts received Successfully")
+            } else {
+                return Result.Error("An error Occurred while retrieving", emptyList())
+            }
+        } catch (e: Exception) {
+            return Result.Error("Cannot Retrieve", emptyList())
+        }
+    }
+
+    override suspend fun searchPostUser(search : SearchPost): Result<List<GetPost>> {
+        try {
+            val token = sessionManager.getJwtToken()
+                ?: return Result.Error("No token Exists", emptyList())
+
+            val result = apiService.searchPostUser("Bearer $token", search)
+
+            if (result.isNotEmpty()) {
+                return Result.Success(result, "Posts received Successfully")
+            } else {
+                return Result.Error("An error Occurred while retrieving", emptyList())
+            }
+        } catch (e: Exception) {
+            return Result.Error("Cannot Retrieve", emptyList())
         }
     }
 }

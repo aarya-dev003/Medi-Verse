@@ -60,5 +60,9 @@ object Constants {
     const val GET_FEEDBACK_ADMIN = "$API_VERSION/$AUTH_TYPE/$FEEDBACK/get"
     const val GET_FEEDBACK_CLUB = "$API_VERSION/$LOGIN_TYPE/$FEEDBACK/get"
 
+    //post search
+    const val SEARCH_POST = "$API_VERSION/$POST_TYPE/search/user"
+    const val SEARCH_POST_CLUB = "$API_VERSION/$POST_TYPE/search/club"
+
 
 }

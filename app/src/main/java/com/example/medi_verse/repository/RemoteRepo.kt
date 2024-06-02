@@ -7,6 +7,7 @@ import com.example.medi_verse.data.remote.model.GetPost
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.Post
 import com.example.medi_verse.data.remote.model.RegisterRequest
+import com.example.medi_verse.data.remote.model.SearchPost
 import com.example.medi_verse.utils.Result
 import com.example.requests.ClubLoginRequest
 
@@ -43,5 +44,8 @@ interface RemoteRepo {
 
     suspend fun getFeedbackClub(): Result<List<FeedbackItem>>
     suspend fun getFeedbackAdmin(): Result<List<FeedbackItem>>
+
+    suspend fun searchPostClub(search : SearchPost) : Result<List<GetPost>>
+    suspend fun searchPostUser(search : SearchPost) : Result<List<GetPost>>
 
 }
