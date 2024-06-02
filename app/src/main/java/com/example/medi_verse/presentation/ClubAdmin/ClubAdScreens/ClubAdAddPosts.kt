@@ -48,6 +48,7 @@ import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.presentation.ClubAdmin.ClubAdNav.ClubAdminBottomBarScreen
 import com.example.medi_verse.R
 import com.example.medi_verse.data.remote.model.Post
+import com.example.medi_verse.presentation.Formator.uploadImageToFirebase
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
 import com.example.medi_verse.utils.Result
@@ -58,26 +59,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-
-private const val TAG ="upload post"
-private suspend fun uploadImageToFirebase(context: Context, imageUri: Uri, description: String): String? {
-    val storageRef = Firebase.storage.reference
-    val imagesRef = storageRef.child("posts")
-
-    val fileRef = imagesRef.child("image_${System.currentTimeMillis()}.jpg")
-    val uploadTask = fileRef.putFile(imageUri).await()
-
-    return try {
-        val imageUrl = uploadTask.storage.downloadUrl.await().toString()
-        val imageDescription = description
-        Toast.makeText(context, "Photo posted successfully", Toast.LENGTH_SHORT).show()
-        imageUrl
-    } catch (e: Exception) {
-        Log.e(TAG, "Error uploading image: $e")
-        Toast.makeText(context, "Failed to post photo: ${e.message}", Toast.LENGTH_SHORT).show()
-        null
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -174,7 +155,7 @@ fun ClubAdAddPosts (context: Context, navController: NavController, remoteRepo: 
                 onClick = {
                     if (userdes.isNotEmpty() && imageUri != null) {
                         GlobalScope.launch(Dispatchers.Main) {
-                            val imageUrl = uploadImageToFirebase(context, imageUri!!, userdes)
+                            val imageUrl = uploadImageToFirebase(context, imageUri!!, userdes, "posts")
                             imageUrl?.let { url ->
                                 val post = Post(
                                     image = url,
