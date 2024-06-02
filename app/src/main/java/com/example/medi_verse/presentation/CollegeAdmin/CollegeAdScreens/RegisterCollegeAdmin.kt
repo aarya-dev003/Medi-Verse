@@ -33,12 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.medi_verse.App.AppScreens
 import com.example.medi_verse.data.remote.model.LoginRequest
 import com.example.medi_verse.data.remote.model.RegisterRequest
+import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdNav.CollegeAdBottomBarScreen
 import com.example.medi_verse.presentation.Student.StNav.HomeBottomBarScreen
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.ui.theme.BackgroundColor
@@ -48,6 +50,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.Dispatcher
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -192,32 +195,33 @@ fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, c
                 textStyle = TextStyle(color = Color.Black),
                 shape = RoundedCornerShape(12.dp)
             )
-            Button(onClick = {
-                             val registerClub = RegisterRequest(
-                                 name = newusernamevalue.value,
-                                 username = newuserusernamevalue.value,
-                                 email = newuseremailvalue.value,
-                                 password = newuserpasswordvalue.value
-                             )
-                CoroutineScope(Dispatchers.IO).launch {
-                    val result = remoteRepo.createClubAdmin(registerClub)
-                    createClubResult.value = result
-                }
-//                navController.navigate(route = HomeBottomBarScreen.Home.route) {
-//                    popUpTo(route = ) {
-//                        inclusive = true
-//                    }
-            },
+            Button(
+                onClick = {
+                    val registerClub = RegisterRequest(
+                        name = newusernamevalue.value,
+                        username = newuserusernamevalue.value,
+                        email = newuseremailvalue.value.lowercase(),
+                        password = newuserpasswordvalue.value
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val result = remoteRepo.createClubAdmin(registerClub)
+                        createClubResult.value = result
+                    }
+                    navController.navigate(route = CollegeAdBottomBarScreen.Home.route) {
+                        popUpTo(route = CollegeAdBottomBarScreen.Home.route) {
+                            inclusive = true
+                        }
+                    }
+                },
                 modifier = Modifier.size(width = 150.dp, height = 50.dp),
                 colors= ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
                     contentColor = Color.White,
-                ), ) {
+                )
+            ) {
                 Text(text = "Register")
             }
 
-
-        }
         createClubResult.value?.let { result ->
             if (result is Result.Success) {
                 navController.navigate(AppScreens.CollegeAdminMainScreen.route) {
@@ -234,4 +238,4 @@ fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, c
 
     }
 
-}
+}}

@@ -93,7 +93,7 @@ fun CollegeAdLogin(context: Context, AppnavController: NavController, remoteRepo
                 }
 
                 TextField(
-                    value = useremailvalue.value,
+                    value = useremailvalue.value.lowercase(),
                     onValueChange = { newValue ->
                         useremailvalue.value = newValue
                     },

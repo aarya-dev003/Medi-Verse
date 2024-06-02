@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +41,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -271,7 +273,7 @@ fun ScafoldContent(
                             containerColor = Color(0xFFEDF2FB),
                         ),
                         title = {
-                            val uservalue = remember { mutableStateOf("") }
+                               val uservalue = remember { mutableStateOf("") }
                             TextField(
                                 value = uservalue.value,
                                 onValueChange = {
@@ -289,7 +291,18 @@ fun ScafoldContent(
                                     containerColor = Color.White,
                                 ),
                                 textStyle = TextStyle(color = Color.Black),
-                                shape = RoundedCornerShape(12.dp),)
+                                shape = RoundedCornerShape(12.dp),
+//                                trailingIcon ={
+//                                    IconButton(onClick = {
+//                                    }) {
+//                                        Icon(
+//                                            imageVector = Icons.Default.Search,
+//                                            contentDescription = "Search Icon",
+//                                            tint = Color.Black
+//                                        )
+//                                    }
+//                                }
+                                )
                         },
                         navigationIcon = {
                             IconButton(onClick = onMenuIconClick) {
@@ -303,15 +316,29 @@ fun ScafoldContent(
                         actions = {
                             IconButton(onClick = { /*TODO*/ }) {
                                 Icon(
-                                    imageVector = Icons.Default.Notifications,
+                                    imageVector = Icons.Default.Search,
                                     contentDescription = "Search Icon",
                                     tint = Color.Black
                                 )
                             }
                         }
+
                     )
                 }
             ) {
+//                var uservalue by remember { mutableStateOf("") }
+//                var active by remember { mutableStateOf(true) }
+//                SearchBar(query = uservalue,
+//                    onQueryChange ={
+//                        uservalue=it
+//                    },
+//                    onSearch ={active=false},
+//                    active =active ,
+//                    onActiveChange ={
+//                        active=it
+//                    } ) {
+//
+//                }
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier
@@ -320,6 +347,7 @@ fun ScafoldContent(
                 ) { pageIndex ->
                     PostItem(post = post[pageIndex])
                 }
+
             }
         }
     }

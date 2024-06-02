@@ -75,7 +75,7 @@ fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo, contex
                     LazyColumn(Modifier.fillMaxSize().padding(bottom = 56.dp)) {
                         items(announcements) { announcement ->
                             AnnouncementLayout( // Corrected reference to AnnouncementLayout
-                                img = R.drawable.annoucementshumanpic,
+                                img = R.drawable.medicapslogo,
                                 announcement = announcement.description // Use announcement description
                             )
                         }
@@ -123,10 +123,9 @@ fun AnnouncementLayout(img: Int, announcement: String) {
                 painter = painterResource(id = img),
                 contentDescription = "",
                 modifier = Modifier
-                    .size(55.dp)
+                    .size(105.dp)
                     .padding(8.dp)
                     .clip(CircleShape)
-                    .border(1.dp, Color.Black, CircleShape)
                     .weight(.2f)
             )
             Column(modifier = Modifier.weight(.5f)) {

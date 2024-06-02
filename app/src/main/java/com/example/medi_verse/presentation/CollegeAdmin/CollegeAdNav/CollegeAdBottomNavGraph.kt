@@ -10,6 +10,7 @@ import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdNav.CollegeAdBo
 import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdScreens.CollegeAdAnnoucements
 import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdScreens.CollegeAdHome
 import com.example.medi_verse.presentation.CollegeAdmin.CollegeAdScreens.RegisterCollegeAdmin
+import com.example.medi_verse.presentation.Student.HomeMainScreen
 import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.utils.SessionManager
 
