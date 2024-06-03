@@ -72,14 +72,31 @@ fun StAnnouncements(navController: NavController, remoteRepo: RemoteRepo, contex
                 val announcements = result.data // Retrieve the list of announcements
                 if (!announcements.isNullOrEmpty()) { // Ensure announcements list is not null or empty
                     // If there are announcements, display them in LazyColumn
-                    LazyColumn(Modifier.fillMaxSize().padding(bottom = 56.dp)) {
-                        items(announcements) { announcement ->
-                            AnnouncementLayout( // Corrected reference to AnnouncementLayout
-                                img = R.drawable.medicapslogo,
-                                announcement = announcement.description // Use announcement description
-                            )
+                    Column {
+                        Text(
+                            text = "Announcement",
+                            color = Color(0xFF134074),
+                            fontSize = 30.sp,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 15.dp)
+                        )
+                        LazyColumn(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(bottom = 56.dp)) {
+                            items(announcements) { announcement ->
+                                AnnouncementLayout( // Corrected reference to AnnouncementLayout
+                                    img = R.drawable.medicapslogo,
+                                    announcement = announcement.description // Use announcement description
+                                )
+                            }
                         }
                     }
+
                 } else {
                     // If no announcements are available, display a message
                     Toast.makeText(context, "No Announcement available", Toast.LENGTH_SHORT).show()

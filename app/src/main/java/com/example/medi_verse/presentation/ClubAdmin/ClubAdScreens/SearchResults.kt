@@ -35,12 +35,12 @@ fun SearchResults(remoteRepo: RemoteRepo,searchText: String) {
     val search = SearchPost(
         club_id = searchText
     )
-    LaunchedEffect(search) {
-        val searchResult = remoteRepo.searchPostClub(search)
-        if (searchResult is Result.Success) {
-            items.value = searchResult.data!!
-        }
-    }
+//    LaunchedEffect(search) {
+//        val searchResult = remoteRepo.searchPostClub(search)
+//        if (searchResult is Result.Success) {
+//            items.value = searchResult.data!!
+//        }
+//    }
     Box(
         modifier = Modifier
             .background(Color.White)

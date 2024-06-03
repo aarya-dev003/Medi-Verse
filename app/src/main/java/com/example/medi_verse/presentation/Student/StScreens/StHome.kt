@@ -60,6 +60,7 @@ import com.example.medi_verse.repository.RemoteRepo
 import com.example.medi_verse.utils.Result
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -128,19 +129,15 @@ fun StHome(context: Context, HomenavController: NavController, remoteRepo: Remot
                                 .fillMaxWidth()
                                 .align(Alignment.BottomCenter)
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.boy),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .padding(bottom = 10.dp)
-                                    .size(150.dp)
+                            Text(text = "Hey!", modifier = Modifier.padding(start = 10.dp), fontSize = 64.sp, fontWeight = FontWeight.W300
                             )
                             var name by remember { mutableStateOf("") }
                             var email by remember { mutableStateOf("") }
                             LaunchedEffect(Unit) {
                                 name = sessionManager.getCurrentUsername() ?: ""
-                                email = sessionManager.getCurrentEmail() ?: ""
+                                email = sessionManager.getCurrentEmail() ?: "$name+@gmail.com"
                             }
+                            Spacer(modifier = Modifier.height(15.dp))
                             Text(
                                 text = name,
                                 color = Color(0xFF13315C),
@@ -150,7 +147,7 @@ fun StHome(context: Context, HomenavController: NavController, remoteRepo: Remot
                                 modifier = Modifier.padding(start = 10.dp)
                             )
                             Text(
-                                text = name+"@gmail.com",
+                                text = email,
                                 color = Color(0xFF13315C),
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.Monospace,
@@ -254,17 +251,7 @@ fun ScafoldContent(
     ) {
         Column(Modifier.fillMaxSize()
         ) {
-            Text(
-                text = "Medi-verse",
-                color = Color.Black,
-                fontSize = 30.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-            )
+
             Scaffold(
                 modifier = Modifier,
                 topBar = {
@@ -273,40 +260,51 @@ fun ScafoldContent(
                             containerColor = Color(0xFFEDF2FB),
                         ),
                         title = {
-                            TextField(
-                                modifier = Modifier.fillMaxWidth(),
-                                value = searchText,
-                                onValueChange = { searchText = it },
-                                label = { Text("Search Video Title") },
-                                trailingIcon = {
-                                    IconButton(
-                                        onClick = {
-                                            Log.d("searchText", searchText)
-                                            AppnavController.navigate("${AppScreens.SearchResults.route}/$searchText") {
-                                                launchSingleTop = true
-                                                popUpTo(AppScreens.SearchResults.route) {
-                                                    inclusive = true
-                                                }
-                                            }
-
-                                        },
-                                    ) {
-                                        Icon(Icons.Filled.Search, contentDescription = "Search")
-                                    }
-                                },
-                                colors = TextFieldDefaults.textFieldColors(
-                                    cursorColor = Color.Black,
-                                    unfocusedLabelColor = Color.Black,
-                                    focusedLabelColor = Color.Black,
-                                    unfocusedTextColor = Color.Black,
-                                    focusedTextColor = Color.Black,
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent,
-                                    containerColor = Color.White,
-                                ),
-                                textStyle = TextStyle(color = Color.Black),
-                                shape = RoundedCornerShape(12.dp),
+                            Text(
+                                text = "Medi-verse",
+                                color = Color.Black,
+                                fontSize = 30.sp,
+                                fontFamily = FontFamily.Serif,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 10.dp)
                             )
+//                            TextField(
+//                                modifier = Modifier.fillMaxWidth(),
+//                                value = searchText,
+//                                onValueChange = { searchText = it },
+//                                label = { Text("Search Video Title") },
+//                                trailingIcon = {
+//                                    IconButton(
+//                                        onClick = {
+//                                            Log.d("searchText", searchText)
+//                                            AppnavController.navigate("${AppScreens.SearchResults.route}/$searchText") {
+//                                                launchSingleTop = true
+//                                                popUpTo(AppScreens.SearchResults.route) {
+//                                                    inclusive = true
+//                                                }
+//                                            }
+//
+//                                        },
+//                                    ) {
+//                                        Icon(Icons.Filled.Search, contentDescription = "Search")
+//                                    }
+//                                },
+//                                colors = TextFieldDefaults.textFieldColors(
+//                                    cursorColor = Color.Black,
+//                                    unfocusedLabelColor = Color.Black,
+//                                    focusedLabelColor = Color.Black,
+//                                    unfocusedTextColor = Color.Black,
+//                                    focusedTextColor = Color.Black,
+//                                    unfocusedIndicatorColor = Color.Transparent,
+//                                    focusedIndicatorColor = Color.Transparent,
+//                                    containerColor = Color.White,
+//                                ),
+//                                textStyle = TextStyle(color = Color.Black),
+//                                shape = RoundedCornerShape(12.dp),
+//                            )
                         },
                         navigationIcon = {
                             IconButton(onClick = onMenuIconClick) {
@@ -335,6 +333,7 @@ fun ScafoldContent(
                         .fillMaxSize()
                         .background(Color(0xFFEDF2FB))
                 ) { pageIndex ->
+                    Spacer(modifier = Modifier.height(10.dp))
                     PostItem(post = post[pageIndex])
                 }
             }
@@ -367,52 +366,57 @@ fun HomeLayout(
     }
 }
 
+
 @Composable
 fun PostItem(post: GetPost) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp)
+            .padding(top = 0.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(modifier = Modifier.height(76.dp))
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(350.dp)
-                .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(16.dp)),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(post.image).build(),
+                .data(post.image)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Row {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 text = post.username,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(start = 15.dp, top = 8.dp)
+                fontSize = 17.sp,
+                fontFamily = FontFamily.Serif,
+                color = Color.Black,
+                modifier = Modifier.padding(start = 0.dp)
             )
-            Spacer(modifier = Modifier.width(156.dp))
             Text(
                 text = formatTimestamp(timestamp = post.time),
-                color = Color.Black,
-                fontSize = 16.sp,
-                fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(start=15.dp,top = 8.dp, bottom = 4.dp)
+                fontSize = 17.sp,
+                fontFamily = FontFamily.Serif,
+                color = Color.Black,
+                modifier = Modifier.padding(end = 0.dp)
             )
         }
-
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = post.description,
             color = Color(0xFF13315C),
             fontSize = 16.sp,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Normal,
-            modifier = Modifier.padding(start=10.dp, bottom = 1.dp)
+            modifier = Modifier.padding(start = 0.dp, bottom = 7.dp)
         )
     }
 }

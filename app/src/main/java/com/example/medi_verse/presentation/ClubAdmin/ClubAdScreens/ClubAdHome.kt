@@ -11,6 +11,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -358,7 +359,6 @@ fun ScafoldContent(
                             textStyle = TextStyle(color = Color.Black),
                             shape = RoundedCornerShape(12.dp),
                             )
-
                         },
                         navigationIcon = {
                             IconButton(onClick = onMenuIconClick) {
@@ -394,6 +394,7 @@ fun ScafoldContent(
                         .fillMaxSize()
                         .background(Color(0xFFEDF2FB))
                 ) { pageIndex ->
+                    Spacer(modifier = Modifier.height(10.dp))
                     PostItem(post = post[pageIndex])
                 }
 
@@ -431,48 +432,52 @@ fun CLubHomeLayout(
 fun PostItem(post: GetPost) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp)
+            .padding(top = 0.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(modifier = Modifier.height(76.dp))
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(350.dp)
-                .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(16.dp)),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(post.image).build(),
+                .data(post.image)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Row {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 text = post.username,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(start = 15.dp, top = 8.dp)
+                fontSize = 17.sp,
+                fontFamily = FontFamily.Serif,
+                color = Color.Black,
+                modifier = Modifier.padding(start = 0.dp)
             )
-            Spacer(modifier = Modifier.width(156.dp))
             Text(
                 text = formatTimestamp(timestamp = post.time),
-                color = Color.Black,
-                fontSize = 16.sp,
-                fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(start=15.dp,top = 8.dp, bottom = 4.dp)
+                fontSize = 17.sp,
+                fontFamily = FontFamily.Serif,
+                color = Color.Black,
+                modifier = Modifier.padding(end = 0.dp)
             )
         }
-
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = post.description,
             color = Color(0xFF13315C),
             fontSize = 16.sp,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Normal,
-            modifier = Modifier.padding(start=10.dp, bottom = 1.dp)
+            modifier = Modifier.padding(start = 0.dp, bottom = 7.dp)
         )
     }
 }
