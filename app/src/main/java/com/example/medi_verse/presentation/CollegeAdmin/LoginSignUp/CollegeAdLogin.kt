@@ -97,7 +97,7 @@ fun CollegeAdLogin(context: Context, AppnavController: NavController, remoteRepo
                     onValueChange = { newValue ->
                         useremailvalue.value = newValue
                     },
-                    label = { Text(text = "Enter email") },
+                    label = { Text(text = "Enter username") },
                     modifier = Modifier.padding(vertical = 18.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         cursorColor = Color.Black,

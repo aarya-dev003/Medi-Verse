@@ -335,7 +335,6 @@ fun ScafoldContent(
                                                 launchSingleTop = true
                                                 popUpTo(AppScreens.SearchResults.route) {
                                                     inclusive = true
-
                                                     AppnavController.popBackStack()
 
                                                 }
