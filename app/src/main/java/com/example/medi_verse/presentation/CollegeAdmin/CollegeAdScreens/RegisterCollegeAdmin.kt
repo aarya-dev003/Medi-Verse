@@ -99,6 +99,7 @@ fun RegisterCollegeAdmin(navController: NavController, remoteRepo: RemoteRepo, c
                     AppnavController.navigate(AppScreens.Decision.route) {
                         popUpTo(AppScreens.Decision.route) {
                             inclusive = true
+                            AppnavController.popBackStack()
                         }
                     }
                 },

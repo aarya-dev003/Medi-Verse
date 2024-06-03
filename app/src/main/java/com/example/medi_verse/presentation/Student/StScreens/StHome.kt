@@ -66,6 +66,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -180,11 +181,11 @@ fun StHome(context: Context, HomenavController: NavController, remoteRepo: Remot
                                 AppnavController.navigate(AppScreens.Decision.route) {
                                     popUpTo(AppScreens.Decision.route) {
                                         inclusive = true
+                                        AppnavController.popBackStack()
                                     }
                                 }
                                 selectedItem = null
                             }
-
                             else{
                                 scope.launch {
                                     drawerState.close()
@@ -207,7 +208,11 @@ fun StHome(context: Context, HomenavController: NavController, remoteRepo: Remot
                         if (posts != null) {
                             if (posts.isNotEmpty()) {
                                 Column {
-                                    DisplayPost(posts, onMenuIconClick = { scope.launch { drawerState.open() } })
+                                    com.example.medi_verse.presentation.ClubAdmin.ClubAdScreens.DisplayPost(
+                                        posts,
+                                        onMenuIconClick = { scope.launch { drawerState.open() } },
+                                        AppnavController
+                                    )
                                 }
                             } else {
                                 Toast.makeText(context, "No posts available", Toast.LENGTH_SHORT).show()
@@ -235,9 +240,13 @@ fun StHome(context: Context, HomenavController: NavController, remoteRepo: Remot
 @Composable
 fun ScafoldContent(
     post: List<GetPost>,
-    onMenuIconClick: () -> Unit
+    onMenuIconClick: () -> Unit,
+    AppnavController: NavController
+
 ) {
     val pagerState = rememberPagerState(pageCount = { post.size })
+    var searchText by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .background(Color(0xFFEDF2FB))
@@ -264,13 +273,27 @@ fun ScafoldContent(
                             containerColor = Color(0xFFEDF2FB),
                         ),
                         title = {
-                            val uservalue = remember { mutableStateOf("") }
                             TextField(
-                                value = uservalue.value,
-                                onValueChange = {
-                                    uservalue.value = it
+                                modifier = Modifier.fillMaxWidth(),
+                                value = searchText,
+                                onValueChange = { searchText = it },
+                                label = { Text("Search Video Title") },
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            Log.d("searchText", searchText)
+                                            AppnavController.navigate("${AppScreens.SearchResults.route}/$searchText") {
+                                                launchSingleTop = true
+                                                popUpTo(AppScreens.SearchResults.route) {
+                                                    inclusive = true
+                                                }
+                                            }
+
+                                        },
+                                    ) {
+                                        Icon(Icons.Filled.Search, contentDescription = "Search")
+                                    }
                                 },
-                                label = { Text(text = "Search") },
                                 colors = TextFieldDefaults.textFieldColors(
                                     cursorColor = Color.Black,
                                     unfocusedLabelColor = Color.Black,
@@ -282,7 +305,8 @@ fun ScafoldContent(
                                     containerColor = Color.White,
                                 ),
                                 textStyle = TextStyle(color = Color.Black),
-                                shape = RoundedCornerShape(12.dp),)
+                                shape = RoundedCornerShape(12.dp),
+                            )
                         },
                         navigationIcon = {
                             IconButton(onClick = onMenuIconClick) {
@@ -319,10 +343,11 @@ fun ScafoldContent(
 }
 
 @Composable
-fun DisplayPost(post: List<GetPost>, onMenuIconClick: () -> Unit) {
+fun DisplayPost(post: List<GetPost>, onMenuIconClick: () -> Unit, AppnavController: NavController) {
     ScafoldContent(
         post = post,
-        onMenuIconClick = onMenuIconClick
+        onMenuIconClick = onMenuIconClick,
+        AppnavController
     )
 }
 

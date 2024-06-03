@@ -40,7 +40,7 @@ Box(modifier = Modifier
             modifier = Modifier.padding(top = 170.dp),
 
     ){
-        Text(text = "Are you an?", fontFamily = FontFamily.Monospace, fontSize = 25.sp,fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 25.dp) )
+        Text(text = "Are you a?", fontFamily = FontFamily.Monospace, fontSize = 25.sp,fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 25.dp) )
 
             Button(onClick = { AppnavController.navigate(AppScreens.StLogin.route)},
                 modifier = Modifier.size(width = 150.dp, height = 65.dp).padding(top=20.dp),

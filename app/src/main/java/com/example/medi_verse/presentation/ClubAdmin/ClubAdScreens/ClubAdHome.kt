@@ -236,6 +236,7 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
                                 AppnavController.navigate(AppScreens.Decision.route) {
                                     popUpTo(AppScreens.Decision.route) {
                                         inclusive = true
+                                        AppnavController.popBackStack()
                                     }
                                 }
                                 selectedItem = null
@@ -334,6 +335,9 @@ fun ScafoldContent(
                                                 launchSingleTop = true
                                                 popUpTo(AppScreens.SearchResults.route) {
                                                     inclusive = true
+
+                                                    AppnavController.popBackStack()
+
                                                 }
                                             }
 
@@ -341,8 +345,21 @@ fun ScafoldContent(
                                     ) {
                                         Icon(Icons.Filled.Search, contentDescription = "Search")
                                     }
-                                }
+                                },
+                                colors = TextFieldDefaults.textFieldColors(
+                                cursorColor = Color.Black,
+                                unfocusedLabelColor = Color.Black,
+                                focusedLabelColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
+                                focusedTextColor = Color.Black,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                containerColor = Color.White,
+                            ),
+                            textStyle = TextStyle(color = Color.Black),
+                            shape = RoundedCornerShape(12.dp),
                             )
+
                         },
                         navigationIcon = {
                             IconButton(onClick = onMenuIconClick) {

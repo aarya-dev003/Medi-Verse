@@ -17,7 +17,7 @@ import com.example.medi_verse.utils.SessionManager
 fun ClubAdminBottomNavGraph(ClubnavController:NavHostController,context: Context, remoteRepo: RemoteRepo,AppnavController: NavController,sessionManager: SessionManager) {
     NavHost(navController = ClubnavController, startDestination = ClubAdminBottomBarScreen.Home.route ){
         composable(route= ClubAdminBottomBarScreen.Home.route){
-            ClubAdHome(context = context,ClubnavController,remoteRepo,AppnavController,sessionManager)
+            ClubAdHome(context = context,ClubnavController=ClubnavController,remoteRepo,AppnavController,sessionManager)
         }
         composable(route= ClubAdminBottomBarScreen.AddPost.route){
             ClubAdAddPosts(context,ClubnavController, remoteRepo)
