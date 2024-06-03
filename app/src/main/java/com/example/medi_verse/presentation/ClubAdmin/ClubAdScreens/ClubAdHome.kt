@@ -330,10 +330,13 @@ fun ScafoldContent(
                                     IconButton(
                                         onClick = {
                                             Log.d("searchText", searchText)
-                                            AppnavController.navigate("${AppScreens.ClubAdminSearchResults.route}/$searchText") {
+                                            AppnavController.navigate("${AppScreens.SearchResults.route}/$searchText") {
                                                 launchSingleTop = true
-                                                popUpTo("SearchPage") { inclusive = true }
+                                                popUpTo(AppScreens.SearchResults.route) {
+                                                    inclusive = true
+                                                }
                                             }
+
                                         },
                                     ) {
                                         Icon(Icons.Filled.Search, contentDescription = "Search")

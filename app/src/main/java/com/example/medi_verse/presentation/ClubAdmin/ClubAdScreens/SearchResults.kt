@@ -30,7 +30,7 @@ import com.example.medi_verse.utils.Result
 
 
 @Composable
-fun ClubAdminSearchResults(remoteRepo: RemoteRepo,searchText: String) {
+fun SearchResults(remoteRepo: RemoteRepo,searchText: String) {
     val items = remember { mutableStateOf<List<GetPost>>(emptyList()) }
     val search = SearchPost(
         club_id = searchText
