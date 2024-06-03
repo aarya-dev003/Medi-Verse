@@ -10,6 +10,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -40,6 +43,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -66,6 +70,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -173,6 +178,10 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
                                     }
 
                                     is Result.Loading -> TODO()
+                                    is Result.Error -> TODO()
+                                    is Result.Loading -> TODO()
+                                    is Result.Success -> TODO()
+                                    else -> {}
                                 }
                             }
                             AsyncImage(
@@ -252,7 +261,7 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
                         if (posts != null) {
                             if (posts.isNotEmpty()) {
                                 Column {
-                                    DisplayPost(posts, onMenuIconClick = { scope.launch { drawerState.open() } })
+                                    DisplayPost(posts, onMenuIconClick = { scope.launch { drawerState.open() } }, AppnavController)
                                 }
                             } else {
                                 Toast.makeText(context, "No posts available", Toast.LENGTH_SHORT).show()
@@ -280,9 +289,11 @@ fun ClubAdHome(context: Context,ClubnavController: NavController,remoteRepo: Rem
 @Composable
 fun ScafoldContent(
     post: List<GetPost>,
-    onMenuIconClick: () -> Unit
+    onMenuIconClick: () -> Unit,
+    AppnavController: NavController
 ) {
     val pagerState = rememberPagerState(pageCount = { post.size })
+    var searchText by remember { mutableStateOf("") }
     Box(
         modifier = Modifier
             .background(Color(0xFFEDF2FB))
@@ -304,41 +315,31 @@ fun ScafoldContent(
             Scaffold(
                 modifier = Modifier,
                 topBar = {
+
                     TopAppBar(
                         colors = TopAppBarDefaults.smallTopAppBarColors(
                             containerColor = Color(0xFFEDF2FB),
                         ),
                         title = {
-                               val uservalue = remember { mutableStateOf("") }
                             TextField(
-                                value = uservalue.value,
-                                onValueChange = {
-                                    uservalue.value = it
-                                },
-                                label = { Text(text = "Search") },
-                                colors = TextFieldDefaults.textFieldColors(
-                                    cursorColor = Color.Black,
-                                    unfocusedLabelColor = Color.Black,
-                                    focusedLabelColor = Color.Black,
-                                    unfocusedTextColor = Color.Black,
-                                    focusedTextColor = Color.Black,
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent,
-                                    containerColor = Color.White,
-                                ),
-                                textStyle = TextStyle(color = Color.Black),
-                                shape = RoundedCornerShape(12.dp),
-//                                trailingIcon ={
-//                                    IconButton(onClick = {
-//                                    }) {
-//                                        Icon(
-//                                            imageVector = Icons.Default.Search,
-//                                            contentDescription = "Search Icon",
-//                                            tint = Color.Black
-//                                        )
-//                                    }
-//                                }
-                                )
+                                modifier = Modifier.fillMaxWidth(),
+                                value = searchText,
+                                onValueChange = { searchText = it },
+                                label = { Text("Search Video Title") },
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            Log.d("searchText", searchText)
+                                            AppnavController.navigate("${AppScreens.ClubAdminSearchResults.route}/$searchText") {
+                                                launchSingleTop = true
+                                                popUpTo("SearchPage") { inclusive = true }
+                                            }
+                                        },
+                                    ) {
+                                        Icon(Icons.Filled.Search, contentDescription = "Search")
+                                    }
+                                }
+                            )
                         },
                         navigationIcon = {
                             IconButton(onClick = onMenuIconClick) {
@@ -349,18 +350,11 @@ fun ScafoldContent(
                                 )
                             }
                         },
-                        actions = {
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = "Search Icon",
-                                    tint = Color.Black
-                                )
-                            }
-                        }
 
                     )
                 }
+
+
             ) {
 //                var uservalue by remember { mutableStateOf("") }
 //                var active by remember { mutableStateOf(true) }
@@ -390,10 +384,11 @@ fun ScafoldContent(
 }
 
 @Composable
-fun DisplayPost(post: List<GetPost>, onMenuIconClick: () -> Unit) {
+fun DisplayPost(post: List<GetPost>, onMenuIconClick: () -> Unit, AppnavController: NavController) {
     ScafoldContent(
         post = post,
-        onMenuIconClick = onMenuIconClick
+        onMenuIconClick = onMenuIconClick,
+        AppnavController
     )
 }
 
