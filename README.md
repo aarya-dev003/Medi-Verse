@@ -29,12 +29,12 @@ Medi-Verse is an innovative Android application designed to foster communication
 
 ## Photos
 
-<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/64585d02-bbb2-4615-9b49-33b78a573caf" alt="Screenshot 1" width="200" />
-<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/f6685b0d-ff30-4b5a-a212-41f6d1b8d67a" alt="Screenshot 2" width="200" />
-<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/e26a5a22-f087-414b-8336-17a2614696ed" alt="Screenshot 3" width="200" />
-<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/e9a06e31-5c1a-412b-80b9-b7d5e4631e37" alt="Screenshot 4" width="200" />
-<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/49586c24-f549-4d48-bc3b-8aedc64122de" alt="Screenshot 5" width="200" />
-<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/cc4d6b5b-bf24-49ea-9c86-c7dc575f952e" alt="Screenshot 6" width="200" />
+<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/64585d02-bbb2-4615-9b49-33b78a573caf" alt="Screenshot 1" width="200" height="400" />
+<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/f6685b0d-ff30-4b5a-a212-41f6d1b8d67a" alt="Screenshot 2" width="200" height="400" />
+<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/e26a5a22-f087-414b-8336-17a2614696ed" alt="Screenshot 3" width="200" height="400" />
+<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/e9a06e31-5c1a-412b-80b9-b7d5e4631e37" alt="Screenshot 4" width="200" height="400" />
+<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/49586c24-f549-4d48-bc3b-8aedc64122de" alt="Screenshot 5" width="200" height="400" />
+<img src="https://github.com/aarya-dev003/Medi-Verse/assets/94800583/cc4d6b5b-bf24-49ea-9c86-c7dc575f952e" alt="Screenshot 6" width="200" height="400" />
 
 ## Benefits
 
@@ -46,5 +46,3 @@ Medi-Verse is an innovative Android application designed to foster communication
 
 - **Enhanced UI/UX**: Continual improvements to ensure a user-friendly experience.
 - **Feature Expansion**: Adding new functionalities based on user feedback and evolving needs.
-
-
